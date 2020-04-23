@@ -1,6 +1,6 @@
 org: discoverooapi
-app: jahresprojekt_discoveroo
-service: discoveroo-test
+app: discoveroo_jahresprojekt
+service: api
 
 provider:
   name: aws
