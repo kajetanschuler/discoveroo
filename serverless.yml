@@ -1,5 +1,4 @@
 org: discoverooapi
-app: discoveroo_jahresprojekt
 service: api
 
 provider:
