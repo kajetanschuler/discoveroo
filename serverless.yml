@@ -1,9 +1,10 @@
+org: discoverooapi
+app: jahresprojekt_discoveroo
 service: discoveroo-test
 
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
   region: eu-central-1
 
 functions:
