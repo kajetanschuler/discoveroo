@@ -16,7 +16,7 @@ functions:
           cors: true 
           integration: LAMBDA
       - http:
-          path: ANY {proxy+}
+          path: ANY {proxy}
           method: get 
           cors: true 
           integration: LAMBDA
