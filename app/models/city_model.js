@@ -4,17 +4,16 @@ const sql = require('./db.js');
 
 // Contstructor for city
 const City = function(city) {
-    this.cityName = city.cityName;
-    this.cityId = city.cityId;
+    this.city = City.city;
     // mehr?
 };
 
 
-City.getById = (cityId, result) => {
+City.getCity = (city, result) => {
     sql.query(`
-        SELECT * FROM city_data WHERE city_data.cityId = ${cityId}; 
-        SELECT city_data.cityId, weather_data.* FROM weather_data INNER JOIN city_data ON city_data.stationId = weather_data.stationId WHERE city_data.cityId = ${cityId};
-        SELECT city_data.cityId, country_data.* FROM country_data INNER JOIN city_data ON city_data.countryCode = country_data.countryCode WHERE city_data.cityId = ${cityId};
+        SELECT * FROM city_data WHERE city_data.cityId = "${city}" OR city_data.cityName = "${city}"; 
+        SELECT city_data.cityId, weather_data.* FROM weather_data INNER JOIN city_data ON city_data.stationId = weather_data.stationId WHERE city_data.cityId = "${city}" OR city_data.cityName = "${city}";
+        SELECT city_data.cityId, country_data.* FROM country_data INNER JOIN city_data ON city_data.countryCode = country_data.countryCode WHERE city_data.cityId = "${city}" OR city_data.cityName = "${city}";
         `, (err, res) => {
         if (err) {
             console.log("error: ". err);
@@ -36,24 +35,6 @@ City.getById = (cityId, result) => {
         }
 
         // not found city with id
-        result({kind: "not_found"}, null);
-    });
-};
-
-City.getByName = (cityName, result) => {
-    sql.query(`SELECT * FROM city_data WHERE cityName = "${cityName}"`, (err, res) => {
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-            return;
-        }
-
-        if (res.length) {
-            console.log("Found city/cities: ", res);
-            result(err, res);
-            return;
-        }
-
         result({kind: "not_found"}, null);
     });
 };
