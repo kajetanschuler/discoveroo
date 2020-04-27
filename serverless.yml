@@ -5,8 +5,8 @@ provider:
   name: aws
   # Uncomment for your current state! Be careful!!!
   # stage: dev
-  stage: test
-  # stage: prod
+  # stage: test
+  stage: prod
   runtime: nodejs12.x
   region: eu-central-1
 
