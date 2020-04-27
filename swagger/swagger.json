@@ -1,0 +1,415 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "version": "1.0.0",
+      "title": "Discoveroo API Docs",
+      "description": "This documentstion will help you find your way in our awesome Discoveroo API so that you are able to serve it to your waiting customers!",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "servers": [
+        {
+          "url": "https://sx9nzfmsw2.execute-api.eu-central-1.amazonaws.com/dev/api/v1"
+        }
+      ],
+    "tags": [
+      {
+        "name": "Cities",
+        "description": "Endpoints related to cities and their details"
+      }
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+
+    "paths": {
+        "/cities": {
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get ID, name and country code from all cities in the database",
+                "responses": {
+                    "200": {
+                        "description": "Cities are found",
+                        "schema": {
+                            "$ref": "#/definitions/Cities"
+                        }
+                    }
+                }
+            }
+        },
+        "/cities/{city}": {
+            "parameters": [
+                {
+                    "name": "city",
+                    "in": "path",
+                    "required": true,
+                    "description": "City ID or city name of the city that you want to find",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get city details with given ID",
+                "responses": {
+                    "200": {
+                        "description": "City is found",
+                        "schema": {
+                            "$ref": "#/definitions/Cities"
+                        }
+                    }
+                }
+            }
+        },
+        "/countries": {
+            "get": {
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get country name and country code for all countries in the database",
+                "responses": {
+                    "200": {
+                        "description": "Countries are found",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    }
+                }
+            }
+        },
+        "/countries/{country}": {
+            "parameters": [
+                {
+                    "name": "country",
+                    "in": "path",
+                    "required": true,
+                    "description": "Country code or country name of the country that you want to find",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get country details with given country Code",
+                "responses": {
+                    "200": {
+                        "description": "Country is found",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    },
+                    "404": {
+                        "description": "Country Code not valid",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    }
+                }
+            }
+        },
+        "/countries/{country}/cities": {
+            "parameters": [
+                {
+                    "name": "country",
+                    "in": "path",
+                    "required": true,
+                    "description": "Country name or country code of the country that you want to find cities in",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get ID and name for all cities in given country",
+                "responses": {
+                    "200": {
+                        "description": "Cities are found",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    },
+                    "404": {
+                        "description": "Country is not valid",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    }
+                }
+            }
+        },
+        "/countries/{country}/regions": {
+            "parameters": [
+                {
+                    "name": "country",
+                    "in": "path",
+                    "required": true,
+                    "description": "Country name or country code of the country that you want to find regions in",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get ID and name for all regions in given country",
+                "responses": {
+                    "200": {
+                        "description": "Regions are found",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    },
+                    "404": {
+                        "description": "Regions is not valid",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    }
+                }
+            }
+        },
+        "/regions": {
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Get region name, region code and country code for all regions in the database",
+                "responses": {
+                    "200": {
+                        "description": "Regions are found",
+                        "schema": {
+                            "$ref": "#/definitions/Regions"
+                        }
+                    }
+                }
+            }
+        },
+        "/regions/{region}": {
+            "parameters": [
+                {
+                    "name": "region",
+                    "in": "path",
+                    "required": true,
+                    "description": "Region name or region code of the region that you want to find",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Get region details for given region",
+                "responses": {
+                    "200": {
+                        "description": "Regions are found",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    },
+                    "404": {
+                        "description": "Regions is not valid",
+                        "schema": {
+                            "$ref": "#/definitions/Countries"
+                        }
+                    }
+                }
+            }
+        },
+        "/regions/{region}/cities": {
+            "parameters": [
+                {
+                    "name": "region",
+                    "in": "path",
+                    "required": true,
+                    "description": "Region name or region code of the region that you want to find citiesd in",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Get ID and name for cities in given region",
+                "responses": {
+                    "200": {
+                        "description": "Regions are found",
+                        "schema": {
+                            "$ref": "#/definitions/Regions"
+                        }
+                    },
+                    "404": {
+                        "description": "Regions is not valid",
+                        "schema": {
+                            "$ref": "#/definitions/Regions"
+                        }
+                    }
+                }
+            }
+        },
+
+        "/weather": {
+            "get": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Get all weather stations and corresponding cities from the database",
+                "responses": {
+                    "200": {
+                        "description": "Weather stations are found"
+                    }
+                }
+            }
+        },
+        "/weather/{city}": {
+            "parameters": [
+                {
+                    "name": "city",
+                    "in": "path",
+                    "required": true,
+                    "description": "City ID or city name that you want to find weather data of",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Get weather data for given city",
+                "responses": {
+                    "200": {
+                        "description": "Weather data is found"
+                    },
+                    "404": {
+                        "description": "Regions is not valid"
+                    }
+                }
+            }
+        },
+        "/weather/{sation}": {
+            "parameters": [
+                {
+                    "name": "station",
+                    "in": "path",
+                    "required": true,
+                    "description": "Station ID that you want to find weather data of",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Weather"
+                ],
+                "summary": "Get weather data for given weather station",
+                "responses": {
+                    "200": {
+                        "description": "Weather data is found"
+                    },
+                    "404": {
+                        "description": "Regions is not valid"
+                    }
+                }
+            }
+        }
+    },
+
+    
+
+
+
+
+
+
+
+    "definitions": {
+      "City": {
+        "required": [
+          "email",
+          "_id"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "email": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          }
+        }
+      },
+      "Cities": {
+        "type": "array",
+        "$ref": "#/definitions/Cities"
+      },
+
+      "Country": {
+        "required": [
+          "email",
+          "_id"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "email": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          }
+        }
+      },
+      "Countries": {
+        "type": "array",
+        "$ref": "#/definitions/Countries"
+      },
+
+      "Region": {
+        "required": [
+          "email",
+          "_id"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "email": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          }
+        }
+      },
+      "Regions": {
+        "type": "array",
+        "$ref": "#/definitions/Regions"
+      }
+    }
+  }
