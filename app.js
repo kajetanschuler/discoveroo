@@ -3,10 +3,8 @@ const express = require('express')
 const app = express()
 
 app.get('/', function (req, res) {
-  res.send('Hello World!')
+  res.send('Welcome to discoveroo!')
 })
-
-
 
 require("./app/routes/city_routes.js")(app);
 require("./app/routes/country_routes")(app);
