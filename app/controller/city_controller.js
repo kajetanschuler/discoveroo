@@ -1,17 +1,18 @@
 // Created - 02.04.2020 - by Kajetan
+
 const City = require('../models/city_model.js');
 
 // Find City by ID
 exports.findOne = (req, res) => {
-    City.getById(req.params.cityId, (err, data) => {
+    City.getCity(req.params.city, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found City with id ${req.params.cityId}.`
+            message: `Not found City with id ${req.params.city}.`
           });
         } else {
           res.status(500).send({
-            message: "Error retrieving City with id " + req.params.cityId
+            message: "Error retrieving City with id " + req.params.city
           });
         }
       } else res.send(data);
