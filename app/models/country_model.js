@@ -46,17 +46,26 @@ Country.getCountryDetails = (country, result) => {
     });
 };
 
-// Function that return regions of country specified with the countryCode
-Country.getRegionsByCountryCode = result => {
-    sql.query();
+// Function that return regions of country specified with the countryCode or countryName
+Country.getRegionsByCountry = (country, result) => {
+    sql.query(`SELECT regionCode, regionName FROM region_data INNER JOIN country_data on region_data.countryCode = country_data.countryCode WHERE country_data.countryName = "${country}" OR country_data.countryCode = "${country}"`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return
+        }
 
-}
+        if (res.length) {
+            console.log("Found region/regions: ", res);
+            result(err, res);
+            return;
+        }
 
-// Function that return regions of country specified with the countryName
-Country.getRegionsByCountryName = result => {
-    sql.query();
+        result({kind: "not_found"}, null);
+    });
+};
 
-}
+
 
 // Function that returns all cities for given CountryName or CountryCode
 Country.getCitiesByCountry = (country, result) => {
