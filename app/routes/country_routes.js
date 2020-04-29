@@ -7,10 +7,10 @@ module.exports = app => {
     app.get("/api/v1/countries", country.findAll);
 
     // Find details for one country by countryCode or countryName
-    app.get("/api/v1/countries/:countryCode", country.findCountry);
+    app.get("/api/v1/countries/:country", country.findCountry);
 
     // Find all regions in country
-
+    app.get("/api/v1/countries/:country/regions", country.findRegionsInCountry);
 
     // Find all cities in country by CountryCode or CountryName
     app.get("/api/v1/countries/:country/cities", country.findCitiesInCountry);

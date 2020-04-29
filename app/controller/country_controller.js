@@ -21,24 +21,37 @@ exports.findAll = (req, res) => {
 
 // Find one country by countryCode or countryName
 exports.findCountry = (req, res) => {
-    Country.getCountryDetails(req.params.countryCode, (err, data) => {
+    Country.getCountryDetails(req.params.country, (err, data) => {
         if (err) {
             if (err === "not_found") {
                 res.status(404).send({
-                    message: "Did not find country with code " + req.params.countryCode
+                    message: "Did not find country with code " + req.params.country
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving country with code " + req.params.countryCode
+                    message: "Error retrieving country with code " + req.params.country
                 });
             }
         } else res.send(data);
     });
 };
 
-// Find all regions in a country by countryCode
-
-// Find all regions in a country by countryName
+// Find all regions in a country by countryCode or countryName
+exports.findRegionsInCountry = (req, res) => {
+    Country.getRegionsByCountry(req.params.country, (err, data) => {
+        if (err) {
+            if (err === "not_found") {
+                res.status(404).send({
+                    message: "Did not find country with code/name " + req.params.country
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving country with code/name " + req.params.country
+                });
+            }
+        } else res.send(data);
+    });
+};
 
 // Find all cities in a country
 exports.findCitiesInCountry = (req, res) => {
