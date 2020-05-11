@@ -26,9 +26,13 @@ City.getCity = (city, result) => {
             var key_country = "country_data";
             var key_weather = "weather_data";
             var json = { };
+            var weather = { };
+            var country = { };
+            weather[key_weather] = res[1];
+            country[key_country] = res[2];
             json[key_city] = res[0];
-            json[key_weather] = res[1];
-            json[key_country] = res[2];
+            json[key_city].push(weather);
+            json[key_city].push(country);
             console.log("Found city: ", json);
             result(err, json);
             return;
