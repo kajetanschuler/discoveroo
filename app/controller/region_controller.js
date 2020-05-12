@@ -27,7 +27,7 @@ exports.findAllRegions = (req, res) => {
 exports.findRegionDetails = (req, res) => {
   Region.getRegionDetails((err, data) => {
     if (err) {
-      if (err.kind == "not found") {
+      if (err.kind === "not found") {
         res.status(404).send({
           message: "Did not find regions with code:" + req.params.region
       });

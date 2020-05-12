@@ -29,7 +29,7 @@ Region.getAllRegions = result => {
 
 // Find details for one region by regionCode or regionName
 Region.getRegionDetails = (region, result) => {
-  sql.query(`SELECT * FROM region_data WHERE countryCode = "${region}" OR countryName = "${region}"`, (err, res) => {
+  sql.query(`SELECT * FROM region_data WHERE regionCode = "${region}" OR regionName = "${region}"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -48,7 +48,7 @@ Region.getRegionDetails = (region, result) => {
 
 // Find all cities in region by regionCode or regionName
 Region.getCitiesInRegion = result => {
-  sql.query(`SELECT cityID, cityName FROM city_data cd INNER JOIN region_data rd ON cd.regionCode = rd.regionCode where rd.regionName ="${region}" OR rd.regionCode = "${region}"`, (err, res) => {
+  sql.query(`SELECT cityID, cityName FROM city_data cd INNER JOIN region_data rd ON cd.regionCode = rd.regionCode where rd.regionName ="${region}" OR cd.regionCode = "${region}"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
