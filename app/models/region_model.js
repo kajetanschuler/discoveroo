@@ -29,7 +29,7 @@ Region.getAllRegions = result => {
 
 // Find details for one region by regionCode or regionName
 Region.getRegionDetails = (region, result) => {
-  sql.query(`SELECT * FROM region_data WHERE regionCode = "${region}" OR regionName = "${region}"`, (err, res) => {
+  sql.query(`SELECT * FROM region_data WHERE regionCode = ${region} OR regionName = ${region}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
