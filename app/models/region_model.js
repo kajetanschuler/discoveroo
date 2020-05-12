@@ -56,11 +56,12 @@ Region.getCitiesInRegion = (region, result) => {
     }
     if(res.length){
       console.log("Found cities in this region: ", res);
-      result(err, null);
+      result(err, res);
       return;
     }
     result({kind: "not_found"}, null);
   });
 };
+
 
 module.exports = Region;

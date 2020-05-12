@@ -55,7 +55,6 @@ exports.findCitiesInRegion = (req, res) => {
          message: "Error retrieving regions with name" + req.params.region
        });
       }
-    }
-      else res.send(data);
+    } else res.send(data);
   });
 };
