@@ -10,7 +10,7 @@ const Region = function(region) {
 
 //find all region 
 Region.getAllRegions = result => {
-  sql.query("SELECT regionCode, regionName, countryCode FROM city_data", (err, res) => {
+  sql.query("SELECT regionCode, regionName, countryCode FROM region_data", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

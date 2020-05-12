@@ -14,7 +14,7 @@ require("./app/routes/country_routes")(app);
 require("./app/routes/weather_routes")(app);
 require("./app/routes/region_routes")(app);
 
-app.listen(3000, function () {
+app.listen(3003, function () {
   console.log('Example app listening on port 3000!');
 }); 
 
