@@ -26,16 +26,17 @@ Region.getAllRegions = result => {
 
 };
 
+
 // Find details for one region by regionCode or regionName
 Region.getRegionDetails = resut => {
-  sql.query('SELECT * FROM city_data WHERE regionCode = "${country}" OR regionNameName = "${country}"`, (err, res) => "${region}" ', (err, res) => {
+  sql.query(`SELECT * FROM region_data WHERE countryCode = "${region}" OR countryName = "${region}"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null,err);
       return;
     }
     if(res.length){
-      console.log("Found details for this gregion: ", res);
+      console.log("Found details for this region: ", res);
       return;
     }
     result({kind: "not_found"}, null);
