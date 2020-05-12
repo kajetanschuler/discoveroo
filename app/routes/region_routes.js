@@ -1,5 +1,5 @@
 module.exports = app => {
-    const region = require('../../../../travelapi_expressjs/app/controller/region_controller.js');
+    const region = require('../controller/region_controller.js');
 
     // Find all regions 
     app.get("/api/v1/regions", region.findAllRegions);
