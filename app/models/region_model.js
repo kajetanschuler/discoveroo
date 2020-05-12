@@ -28,15 +28,16 @@ Region.getAllRegions = result => {
 
 
 // Find details for one region by regionCode or regionName
-Region.getRegionDetails = resut => {
+Region.getRegionDetails = (region, result) => {
   sql.query(`SELECT * FROM region_data WHERE countryCode = "${region}" OR countryName = "${region}"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null,err);
+      result(err, null);
       return;
     }
     if(res.length){
       console.log("Found details for this region: ", res);
+      result(err, res);
       return;
     }
     result({kind: "not_found"}, null);
@@ -46,15 +47,16 @@ Region.getRegionDetails = resut => {
 
 
 // Find all cities in region by regionCode or regionName
-Region.getCitiesInRegion = resut => {
-  sql.query('SELECT cityID, cityName FROM city_data as cd INNER JOIN region_data as rd ON cd.regionCode = rd.regionCode where rd.regionName ="${region}" OR rd.regionCode = "${region}', (err, res) => {
+Region.getCitiesInRegion = result => {
+  sql.query(`SELECT cityID, cityName FROM city_data cd INNER JOIN region_data rd ON cd.regionCode = rd.regionCode where rd.regionName ="${region}" OR rd.regionCode = "${region}"`, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null,err);
+      result(err, null);
       return;
     }
     if(res.length){
       console.log("Found cities in this region: ", res);
+      result(err, null);
       return;
     }
     result({kind: "not_found"}, null);
@@ -62,3 +64,4 @@ Region.getCitiesInRegion = resut => {
 };
 
 module.exports = Region
+

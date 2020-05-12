@@ -28,20 +28,17 @@ exports.findRegionDetails = (req, res) => {
   Region.getRegionDetails((err, data) => {
     if (err) {
       if (err.kind == "not found") {
-      res.status(500).send({
-        message: "Did not find regions with code:" + req.params.regionCode
+        res.status(404).send({
+          message: "Did not find regions with code:" + req.params.region
       });
-    }
-      else {
+    } else {
         res.status(500).send({
-          message: "Error retrieving regions with Code" + req.params.regionCode
+          message: "Error retrieving regions with Code" + req.params.region
         });
       }
-    }
-    else res.send(data);
+    } else res.send(data);
   });
 };
-
 
 
 // Find all cities in region by regionCode or regionName
