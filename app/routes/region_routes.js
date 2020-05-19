@@ -8,6 +8,6 @@ module.exports = app => {
     app.get("/api/v1/regions/:region", region.findRegionDetails);
 
     //Find all cities in region by regionCode or regionName
-    app.get("/api/v1/regions/:region/:cities", region.findCitiesInRegion);
+    app.get("/api/v1/regions/:region/cities", region.findCitiesInRegion);
 
 }
