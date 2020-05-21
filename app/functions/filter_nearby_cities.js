@@ -59,7 +59,7 @@ function filterCities(json) {
             cityList.length = 0;
 
         }
-            delete json[city];
+            //delete json[city];
         
     }
     
@@ -131,7 +131,7 @@ var t1 = performance.now()
 console.log("Call to filter cities took " + (t1 - t0) + " milliseconds.")
 
 
-// TODO: Ohne delete --> 80ms, mit delete 9-10ms, mit if auf stationId --> 8-9ms
+// TODO: Ohne delete --> 80ms, mit delete 9-10ms, mit if auf stationId --> 8-9ms, mit filter davor --> 6-7ms
 
 
 
