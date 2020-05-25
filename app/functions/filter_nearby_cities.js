@@ -59,7 +59,7 @@ function filterCities(json) {
             cityList.length = 0;
 
         }
-            //delete json[city];
+            delete json[city];
         
     }
     
@@ -125,7 +125,7 @@ let clon = ccord[1]
 
 var t0 = performance.now()
 
-filterCities(myfunction(json, clat, clon, 10000));
+filterCities(myfunction(json, clat, clon, 2000));
 
 var t1 = performance.now()
 console.log("Call to filter cities took " + (t1 - t0) + " milliseconds.")
