@@ -2,15 +2,16 @@
 
 const sql = require('./db.js');
 
+var parameters = [];
+var values = [];
+
 const Recommendation = function() {
   //this.parameters = Recommendation.parameters
 };
 
 // Function that returns recommendation according to preferences 
-function getParameters(req, res) {
-  console.log("test4")
-  var parameters = [];
-  var values = [];
+Recommendation.getParameters = (req) => {
+ //console.log(req)
 
   if (req.query.beach !== 'undefined') {
     parameters.push("beach = ?");
@@ -22,21 +23,20 @@ function getParameters(req, res) {
     values.push(req.query.nature);
   }
 
-  console.log("test5")
+  console.log("getParameters vor Return")
 
   return {
     where: parameters.length ?
-             sql.join(parameters, ' AND ') : '1',
+             parameters.join(parameters, ' AND ') : '1',
     values: values
   };
-}
+
+} 
 
 //var parameters = getReommendation(params);
 
-Recommendation.getRecommendation = (req, res) => {
-  console.log("test3")
-  getParameters(req, res),
-  console.log("test6")
+Recommendation.getRecommendation = (recommendation, result) => {
+  //getParameters(req),
   sql.query(('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + parameters.where ), parameters.values, (err, res)  => {
     if (err) {
       console.log("error: ", err);gut 

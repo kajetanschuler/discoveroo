@@ -21,6 +21,7 @@ exports.findAll = (req, res) => {
 
 // Find one country by countryCode or countryName
 exports.findCountry = (req, res) => {
+    //console.log(req)
     Country.getCountryDetails(req.params.country, (err, data) => {
         if (err) {
             if (err === "not_found") {
