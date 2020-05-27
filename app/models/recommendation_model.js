@@ -35,7 +35,7 @@ Recommendation.getParameters = (req) => {
 } 
 
 
-Recommendation.getRecommendation = (recommendation, result) => {
+Recommendation.getRecommendation =  result => {
   //getParameters(req),
   console.log(parameters)
   console.log(values)
