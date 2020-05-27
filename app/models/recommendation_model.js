@@ -4,6 +4,7 @@ const sql = require('./db.js');
 
 var parameters = [];
 var values = [];
+//var whereStatement =; 
 
 const Recommendation = function() {
   //this.parameters = Recommendation.parameters
@@ -14,12 +15,12 @@ Recommendation.getParameters = (req) => {
  //console.log(req)
 
   if (req.query.beach !== 'undefined') {
-    parameters.push("beach = ?");
-    values.push("%" + req.query.beach + "%");
+    parameters.push('beach = ?');
+    values.push('%' + req.query.beach +'%');
   }
 
   if (req.query.nature !== 'undefined') {
-    parameters.push("nature = ?");
+    parameters.push('nature = ?');
     values.push(req.query.nature);
   }
 
@@ -27,19 +28,21 @@ Recommendation.getParameters = (req) => {
 
   return {
     where: parameters.length ?
-             parameters.join(parameters, ' AND ') : '1',
+             parameters.join( ' AND ') : '',
     values: values
   };
 
 } 
 
-//var parameters = getReommendation(params);
 
 Recommendation.getRecommendation = (recommendation, result) => {
   //getParameters(req),
-  sql.query(('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + parameters.where ), parameters.values, (err, res)  => {
+  console.log(parameters)
+  console.log(values)
+  //console.log('model 1. getRecommendation')
+  sql.query(('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + whereStatement.where ), parameters.values, (err, res)  => {
     if (err) {
-      console.log("error: ", err);gut 
+      console.log("error: ", err);
       result(err, null);
       return
     }
@@ -56,4 +59,11 @@ Recommendation.getRecommendation = (recommendation, result) => {
 };
 
 
-module.exports = Recommendation; 
+module.exports = Recommendation;
+//module.exports.whereStatement = whereStatement; 
+
+/*module.exports = {
+  Recommendation,
+  whereStatement
+};*/
+
