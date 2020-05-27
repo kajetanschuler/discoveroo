@@ -15,12 +15,12 @@ Recommendation.getParameters = (req) => {
  //console.log(req)
 
   if (req.query.beach !== 'undefined') {
-    parameters.push('beach = ?');
+    parameters.push('beach_Index = ?');
     values.push(req.query.beach);
   }
 
   if (req.query.nature !== 'undefined') {
-    parameters.push('nature = ?');
+    parameters.push('culture_nIndex = ?');
     values.push(req.query.nature);
   }
 
@@ -53,7 +53,7 @@ Recommendation.getRecommendation = (recommendation, result) => {
       return;
     }
     
-    console.log("Ende von getRecommendation")
+    //console.log("Ende von getRecommendation")
     result({kind: "not_found"}, null);
 
   }); 
