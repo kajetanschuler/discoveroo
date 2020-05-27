@@ -19,10 +19,10 @@ Recommendation.getParameters = (req) => {
     values.push(req.query.beach);
   }
 
-  if (req.query.nature !== 'undefined') {
+  /*if (req.query.nature !== 'undefined') {
     parameters.push('culture_nIndex = ?');
     values.push(req.query.nature);
-  }
+  }*/
 
   //console.log("getParameters vor Return")
 
@@ -39,7 +39,7 @@ Recommendation.getRecommendation =  result => {
   //getParameters(req),
   console.log(parameters)
   console.log(values)
-  //console.log('model 1. getRecommendation')
+  //console.log('Anfang von getRecommendation')
   sql.query('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode' + (parameters.length ? (' WHERE ' + parameters.join(' AND ')) : ""), values, (err, res)  => {
     if (err) {
       console.log("error: ", err);
