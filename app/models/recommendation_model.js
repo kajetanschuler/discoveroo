@@ -40,7 +40,7 @@ Recommendation.getRecommendation = (recommendation, result) => {
   console.log(parameters)
   console.log(values)
   //console.log('model 1. getRecommendation')
-  sql.query('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode' + (parameters.length ? ('WHERE' + parameters.join('AND')) : ""), values, (err, res)  => {
+  sql.query('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode' + (parameters.length ? (' WHERE ' + parameters.join(' AND ')) : ""), values, (err, res)  => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
