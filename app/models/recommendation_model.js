@@ -16,7 +16,7 @@ Recommendation.getParameters = (req) => {
 
   if (req.query.beach !== 'undefined') {
     parameters.push('beach = ?');
-    values.push('%' + req.query.beach +'%');
+    values.push(req.query.beach);
   }
 
   if (req.query.nature !== 'undefined') {
@@ -24,13 +24,13 @@ Recommendation.getParameters = (req) => {
     values.push(req.query.nature);
   }
 
-  console.log("getParameters vor Return")
+  //console.log("getParameters vor Return")
 
-  return {
+  /*return {
     where: parameters.length ?
              parameters.join( ' AND ') : '',
     values: values
-  };
+  };*/
 
 } 
 
@@ -40,7 +40,7 @@ Recommendation.getRecommendation = (recommendation, result) => {
   console.log(parameters)
   console.log(values)
   //console.log('model 1. getRecommendation')
-  sql.query(('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + whereStatement.where ), (err, res)  => {
+  sql.query('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode' ? ('WHERE' + parameters.join('AND')) : ""), values, (err, res)  => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -52,10 +52,11 @@ Recommendation.getRecommendation = (recommendation, result) => {
       result(err, res);
       return;
     }
-
+    
+    console.log("Ende von getRecommendation")
     result({kind: "not_found"}, null);
 
-  }); 
+  }; 
 };
 
 
@@ -67,3 +68,6 @@ module.exports = Recommendation;
   whereStatement
 };*/
 
+
+
+//sql.query(('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + whereStatement.where ), (err, res)  => {
