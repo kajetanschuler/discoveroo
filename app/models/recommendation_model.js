@@ -14,16 +14,50 @@ const Recommendation = function() {
 Recommendation.getParameters = (req) => {
  //console.log(req)
 
+  if (req.query.history !== undefined) {
+    parameters.push('culture_hIndex = ?');
+    values.push(req.query.history);
+  }
+
+  if (req.query.culture !== undefined) {
+    parameters.push('culture_cIndex = ?');
+    values.push(req.query.culture);
+  }
+
+  if (req.query.religion !== undefined) {
+    parameters.push('culture_rIndex = ?');
+    values.push(req.query.religion);
+  }
+
+  if (req.query.architecture !== undefined) {
+    parameters.push('culture_aIndex = ?');
+    values.push(req.query.architecture);
+  }
+
+  if (req.query.industry !== undefined) {
+    parameters.push('culture_iIndex = ?');
+    values.push(req.query.industry);
+  }
+
+  if (req.query.nature !== undefined) {
+    parameters.push('culture_nIndex = ?');
+    values.push(req.query.nature);
+  }
+
+  if (req.query.culture !== undefined) {
+    parameters.push('formations_mIndex = ?');
+    values.push(req.query.mountains);
+  }
+
+  if (req.query.rocks !== undefined) {
+    parameters.push('culture_rIndex = ?');
+    values.push(req.query.rocks);
+  }
+
   if (req.query.beach !== undefined) {
     parameters.push('beach_Index = ?');
     values.push(req.query.beach);
   }
-
-  if (req.query.culture !== undefined) {
-    parameters.push('culture_nIndex = ?');
-    values.push(req.query.culture);
-  }
-
   //console.log("getParameters vor Return")
 
   /*return {
@@ -35,8 +69,8 @@ Recommendation.getParameters = (req) => {
 } 
 
 
-Recommendation.getRecommendation =  result => {
-  //getParameters(req),
+Recommendation.getRecommendation =  (req, result) => {
+  Recommendation.getParameters(req)
   console.log(parameters)
   console.log(values)
   //console.log('Anfang von getRecommendation')

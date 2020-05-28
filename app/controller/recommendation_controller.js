@@ -5,10 +5,9 @@ const recommendation = require('../models/recommendation_model.js');
 
 //hier wird festgelegt, dass der HTTP request req heißt (ebenso für HTTP Response = res)
 exports.buildRecommendation = (req, res) => {
-    recommendation.getParameters(req)
     // whereStatement = recommendation.getParameters(req)
     //console.log(test)
-    recommendation.getRecommendation( (err, data) => {
+    recommendation.getRecommendation(req,  (err, data) => {
         console.log('controller 1. getReommcendation')
         if (err) {
             if (err === "not_found") {
