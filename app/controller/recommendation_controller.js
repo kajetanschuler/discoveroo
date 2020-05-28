@@ -8,7 +8,7 @@ exports.buildRecommendation = (req, res) => {
     // whereStatement = recommendation.getParameters(req)
     //console.log(test)
     recommendation.getRecommendation(req,  (err, data) => {
-        console.log('controller 1. getReommcendation')
+        //console.log('controller 1. getReommcendation')
         if (err) {
             if (err === "not_found") {
                 res.status(404).send({

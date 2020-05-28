@@ -2,8 +2,12 @@
 
 const sql = require('./db.js');
 
-var parameters = [];
-var values = [];
+var cityParameters = [];
+var cityValues = [];
+var countryParameters = [];
+var countryValues = [];
+var weatherParameters = [];
+var weatherValues = [];
 //var whereStatement =; 
 
 const Recommendation = function() {
@@ -15,49 +19,66 @@ Recommendation.getParameters = (req) => {
  //console.log(req)
 
   if (req.query.history !== undefined) {
-    parameters.push('culture_hIndex = ?');
-    values.push(req.query.history);
+    cityParameters.push('culture_hIndex = ?');
+    cityValues.push(req.query.history);
   }
 
   if (req.query.culture !== undefined) {
-    parameters.push('culture_cIndex = ?');
-    values.push(req.query.culture);
+    cityParameters.push('culture_cIndex = ?');
+    cityValues.push(req.query.culture);
   }
 
   if (req.query.religion !== undefined) {
-    parameters.push('culture_rIndex = ?');
-    values.push(req.query.religion);
+    cityParameters.push('culture_rIndex = ?');
+    cityValues.push(req.query.religion);
   }
 
   if (req.query.architecture !== undefined) {
-    parameters.push('culture_aIndex = ?');
-    values.push(req.query.architecture);
+    cityParameters.push('culture_aIndex = ?');
+    cityValues.push(req.query.architecture);
   }
 
   if (req.query.industry !== undefined) {
-    parameters.push('culture_iIndex = ?');
-    values.push(req.query.industry);
+    cityParameters.push('culture_iIndex = ?');
+    cityValues.push(req.query.industry);
   }
 
   if (req.query.nature !== undefined) {
-    parameters.push('culture_nIndex = ?');
-    values.push(req.query.nature);
+    cityParameters.push('culture_nIndex = ?');
+    cityValues.push(req.query.nature);
   }
 
   if (req.query.culture !== undefined) {
-    parameters.push('formations_mIndex = ?');
-    values.push(req.query.mountains);
+    cityParameters.push('formations_mIndex = ?');
+    cityValues.push(req.query.mountains);
   }
 
   if (req.query.rocks !== undefined) {
-    parameters.push('culture_rIndex = ?');
+    cityParameters.push('culture_rIndex = ?');
     values.push(req.query.rocks);
   }
 
   if (req.query.beach !== undefined) {
-    parameters.push('beach_Index = ?');
-    values.push(req.query.beach);
+    cityParameters.push('beach_Index = ?');
+    cityValues.push(req.query.beach);
   }
+
+  if (req.query.infrastructure !== undefined) {
+    countryParameters.push('inrastructureValue= ?');
+    countryValues.push(req.query.infrastructure);
+  }
+  
+  if (req.query.cost !== undefined) {
+    countryParameters.push('cpiIndex = ?');
+    countryValues.push(req.query.cost);
+  }
+
+  if (req.query.safety !== undefined) {
+    countryParameters.push('safety = ?');
+    countryValues.push(req.query.safety);
+  }
+
+
   //console.log("getParameters vor Return")
 
   /*return {
@@ -71,23 +92,29 @@ Recommendation.getParameters = (req) => {
 
 Recommendation.getRecommendation =  (req, result) => {
   Recommendation.getParameters(req)
-  console.log(parameters)
-  console.log(values)
+  console.log(cityParameters)
+  console.log(cityValues)
   //console.log('Anfang von getRecommendation')
-  sql.query('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode' + (parameters.length ? (' WHERE ' + parameters.join(' AND ')) : ""), values, (err, res)  => {
+  sql.query('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE city_data.cityId' + (cityParameters.length ? (' IN (SELECT cityId FROM city_data WHERE ' + cityParameters.join(' AND ') + ')') : ""), cityValues, (err, res)  => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
+      cityValues.length = 0;
+      cityParameters.length = 0;
       return
     }
 
     if (res.length) {
       //console.log("Recommended: ", res);
       result(err, res);
+      cityValues.length = 0;
+      cityParameters.length = 0;
       return;
     }
     
     //console.log("Ende von getRecommendation")
+    cityValues.length = 0;
+    cityParameters.length = 0;
     result({kind: "not_found"}, null);
 
   }); 
