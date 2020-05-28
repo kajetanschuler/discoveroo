@@ -14,15 +14,15 @@ const Recommendation = function() {
 Recommendation.getParameters = (req) => {
  //console.log(req)
 
-  if (req.query.beach !== 'undefined') {
+  if (req.query.beach !== undefined) {
     parameters.push('beach_Index = ?');
     values.push(req.query.beach);
   }
 
-  /*if (req.query.nature !== 'undefined') {
+  if (req.query.culture !== undefined) {
     parameters.push('culture_nIndex = ?');
-    values.push(req.query.nature);
-  }*/
+    values.push(req.query.culture);
+  }
 
   //console.log("getParameters vor Return")
 
@@ -48,7 +48,7 @@ Recommendation.getRecommendation =  result => {
     }
 
     if (res.length) {
-      console.log("Recommended: ", res);
+      //console.log("Recommended: ", res);
       result(err, res);
       return;
     }
