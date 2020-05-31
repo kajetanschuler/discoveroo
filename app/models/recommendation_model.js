@@ -3,7 +3,6 @@
 const sql = require('./db.js').pool;
 const mysql = require('./db.js').mysql; 
 
-//console.log(mysql)
 
 var cityParameters = [];
 var cityValues = [];
@@ -11,6 +10,8 @@ var countryParameters = [];
 var countryValues = [];
 var weatherParameters = [];
 var weatherValues = [];
+var recomCity ={};
+var recomCountry={};
 
 const Recommendation = function() {
   //this.parameters = Recommendation.parameters
@@ -19,6 +20,12 @@ const Recommendation = function() {
 
 // Function that returns recommendation according to preferences 
 function getCityParameters (req) {
+
+  if (typeof recomCountry != undefined){
+    recomCity.where=null
+    recomCity.values=null
+    cityParameters.length = 0;
+    cityValues.length=0;}
 
   if (req.query.history !== undefined) {
     cityParameters.push('culture_hIndex = ?');
@@ -65,16 +72,25 @@ function getCityParameters (req) {
     cityValues.push(req.query.beach);
   }
 
-  return {
+  recomCity = {
     where: cityParameters.length ?
              cityParameters.join( ' AND ') : '1',
     values: cityValues
   };
 
+  return recomCity
+
 };
 
 // Function that returns recommendation according to preferences 
 function getCountryParameters (req) {
+
+  if (typeof recomCountry != undefined){
+    recomCountry.where=null
+    recomCountry.values=null
+    countryParameters.length = 0;
+    countryValues.length=0;
+    console.log(recomCountry, countryParameters)};
 
   if (req.query.infrastructure !== undefined) {
     countryParameters.push('infrastructureValue= ?');
@@ -91,11 +107,14 @@ function getCountryParameters (req) {
     countryValues.push(req.query.safety);
   }
 
-  return {
+  recomCountry = {
     where: countryParameters.length ?
-             countryParameters.join( ' AND ') : '1',
+             countryParameters.join( ' AND ') : '',
     values: countryValues
   };
+  
+  console.log(recomCountry, countryParameters)
+  return recomCountry
 
 };
 
@@ -108,40 +127,31 @@ Recommendation.getRecommendation =  (req, result) => {
   var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
   var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
   var sqlStatement = citySqlStatement + countrySqlStatement
-  sql.query(sqlStatement,
-  (err, res)  => {
+  console.log('countryStatement 1: ' + countryParameters.where)
+  sql.query(sqlStatement, (err, res)  => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
-      cityValues.length = 0;
-      cityParameters.length = 0;
-      countryValues.length = 0;
-      countryParameters.length = 0;
       return
     }
 
     if (res.length) {
       result(err, res);
-      cityValues.length = 0;
-      cityParameters.length = 0;
-      countryValues.length = 0;
-      countryParameters.length = 0;
+      //obwohl length hier auf Null gesetzt wird, ist Array in getCityParameters und getCountryParameters NICHT leer --> length in Funktion auf null setzten
+      //cityValues.length = 0;
+      //cityParameters.length = 0;
+      //countryValues.length = 0;
+      //countryParameters.length = 0;
+
+      //countryParameters.where =null; 
+      //cityParameters.values=null; 
+      //cityParameters.where=null; 
+      //countryParameters.where=null;
+      console.log('countrySqlStatement 2: ' + countryParameters.where)
+      //getCountryParameters(null)
       return;
     }
     
-    cityValues.length = 0;
-    cityParameters.length = 0;
-    countryValues.length = 0;
-    countryParameters.length = 0;
-    countryParameters.values =0; 
-    cityParameters.values=0; 
-    cityParameters.where=0; 
-    countryValues.where=0;
-    sql.Statement=0; 
-    citySqlStatement=0; 
-    countrySqlStatement=0;
-    countrySqlQuery=0;
-    citySqlQuery=0;
     result({kind: "not_found"}, null);
 
   }); 
@@ -149,15 +159,3 @@ Recommendation.getRecommendation =  (req, result) => {
 
 
 module.exports = Recommendation;
-//module.exports.whereStatement = whereStatement; 
-
-/*module.exports = {
-  Recommendation,
-  whereStatement
-};*/
-
-
-
-//sql.query(('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + whereStatement.where ), (err, res)  => {
-
-
