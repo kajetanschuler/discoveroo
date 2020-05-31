@@ -11,14 +11,15 @@ var countryParameters = [];
 var countryValues = [];
 var weatherParameters = [];
 var weatherValues = [];
+//var whereStatement =; 
 
 const Recommendation = function() {
   //this.parameters = Recommendation.parameters
 };
 
-
 // Function that returns recommendation according to preferences 
-function getCityParameters (req) {
+Recommendation.getParameters = (req) => {
+ //console.log(req)
 
   if (req.query.history !== undefined) {
     cityParameters.push('culture_hIndex = ?');
@@ -65,17 +66,6 @@ function getCityParameters (req) {
     cityValues.push(req.query.beach);
   }
 
-  return {
-    where: cityParameters.length ?
-             cityParameters.join( ' AND ') : '1',
-    values: cityValues
-  };
-
-};
-
-// Function that returns recommendation according to preferences 
-function getCountryParameters (req) {
-
   if (req.query.infrastructure !== undefined) {
     countryParameters.push('infrastructureValue= ?');
     countryValues.push(req.query.infrastructure);
@@ -87,28 +77,18 @@ function getCountryParameters (req) {
   }
 
   if (req.query.safety !== undefined) {
-    countryParameters.push('safetyIndex = ?');
+    countryParameters.push('safety = ?');
     countryValues.push(req.query.safety);
   }
-
-  return {
-    where: countryParameters.length ?
-             countryParameters.join( ' AND ') : '1',
-    values: countryValues
-  };
 
 };
 
 
 Recommendation.getRecommendation =  (req, result) => {
-  var cityParameters = getCityParameters(req);
-  var countryParameters = getCountryParameters(req);
-  var citySqlQuery = 'SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where
-  var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))'
-  var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
-  var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
-  var sqlStatement = citySqlStatement + countrySqlStatement
-  sql.query(sqlStatement,
+  Recommendation.getParameters(req)
+  //var sqlStatement = mysql.format(query, inserts);
+  sql.query('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE beach_Index = ? AND countryCode IN (SELECT countryCode FROM country_data WHERE infrastructureValue = ? AND safetyIndex = ?))' ,
+  [req.query.beach, req.query.infrastructure, req.query.safety],
   (err, res)  => {
     if (err) {
       console.log("error: ", err);
@@ -129,19 +109,11 @@ Recommendation.getRecommendation =  (req, result) => {
       return;
     }
     
+  
     cityValues.length = 0;
     cityParameters.length = 0;
     countryValues.length = 0;
     countryParameters.length = 0;
-    countryParameters.values =0; 
-    cityParameters.values=0; 
-    cityParameters.where=0; 
-    countryValues.where=0;
-    sql.Statement=0; 
-    citySqlStatement=0; 
-    countrySqlStatement=0;
-    countrySqlQuery=0;
-    citySqlQuery=0;
     result({kind: "not_found"}, null);
 
   }); 
@@ -159,5 +131,3 @@ module.exports = Recommendation;
 
 
 //sql.query(('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + whereStatement.where ), (err, res)  => {
-
-
