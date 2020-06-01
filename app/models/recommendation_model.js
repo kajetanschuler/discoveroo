@@ -4,21 +4,16 @@ const sql = require('./db.js').pool;
 const mysql = require('./db.js').mysql; 
 
 
-var cityParameters = [];
-var cityValues = [];
-var countryParameters = [];
-var countryValues = [];
-var weatherParameters = [];
+var cityParameters = []; var cityValues = []; var recomCity ={};
+var countryParameters = []; var countryValues = []; var recomCountry={};
 var weatherValues = [];
-var recomCity ={};
-var recomCountry={};
+
 
 const Recommendation = function() {
   //this.parameters = Recommendation.parameters
 };
 
 
-// Function that returns recommendation according to preferences 
 function getCityParameters (req) {
 
   if (recomCountry != undefined){
@@ -82,7 +77,6 @@ function getCityParameters (req) {
 
 };
 
-// Function that returns recommendation according to preferences 
 function getCountryParameters (req) {
 
   if (recomCountry != undefined){
@@ -90,7 +84,7 @@ function getCountryParameters (req) {
     recomCountry.values=null
     countryParameters.length = 0;
     countryValues.length=0;
-    console.log(recomCountry, countryParameters)};
+    /*console.log(recomCountry, countryParameters)*/};
 
   if (req.query.infrastructure !== undefined) {
     countryParameters.push('infrastructureValue= ?');
@@ -113,21 +107,60 @@ function getCountryParameters (req) {
     values: countryValues
   };
   
-  console.log(recomCountry, countryParameters)
+  //console.log(recomCountry, countryParameters)
   return recomCountry
 
 };
 
 
+function getWeatherParameters (req){
+  
+  weatherValues.length=0;
+
+  if (req.query.tempMax !== undefined) {
+    weatherValues.push(req.query.tempMax)
+    
+  }
+
+  if (req.query.tempMin !== undefined) {
+    weatherValues.push(req.query.tempMin);
+  }
+  
+
+}
+
 Recommendation.getRecommendation =  (req, result) => {
   var cityParameters = getCityParameters(req);
-  var countryParameters = getCountryParameters(req)
-  if (countryParameters.values.length > 0) {
-    console.log('test')
-    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where
+  var countryParameters = getCountryParameters(req);
+  var weatherParameters = getWeatherParameters(req);
+  if (countryValues.length > 0 && weatherValues.length > 0) {
+    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where 
+    var weatherSqlQuery = ' AND stationId IN (SELECT stationId FROM weather_data WHERE weather_data.tmax_jan_value <= ? AND tmin_jan_value >= ?)'
     var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))'
     var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
-    var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
+    var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var weatherSqlStatement=mysql.format(weatherSqlQuery, weatherValues); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
+    var sqlStatement = citySqlStatement + weatherSqlStatement + countrySqlStatement
+    console.log('countryStatement 1: ' + countryParameters.where)
+    sql.query(sqlStatement, (err, res)  => {
+      if (err) {
+        result(err, null);
+        return
+      }
+
+      if (res.length) {
+        result(err, res);
+        return;
+      }
+      
+      result({kind: "not_found"}, null);
+
+    })
+  }
+  if (countryValues.length > 0 && weatherValues.length == 0) {
+    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where
+    var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))'
+    var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
+    var citySqlStatement= mysql.format(citySqlQuery, cityInserts); varWeatherSqlStatement=mysql.format(weatherSqlQuery, ); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
     var sqlStatement = citySqlStatement + countrySqlStatement
     console.log('countryStatement 1: ' + countryParameters.where)
     sql.query(sqlStatement, (err, res)  => {
@@ -147,8 +180,8 @@ Recommendation.getRecommendation =  (req, result) => {
 
     })
   }
-  else {
-    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + cityParameters.where
+  if (countryValues.length == 0 && weatherValues.length == 0) {
+    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + cityParameters.where
     var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
     var citySqlStatement= mysql.format(citySqlQuery, cityInserts); 
     sql.query(citySqlStatement, (err, res)  => {
