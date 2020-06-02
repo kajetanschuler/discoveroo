@@ -131,7 +131,7 @@ function getWeatherParameters (req){
     weatherParameters.push('tmin_jan_value >= ?')
   }
 
-  if (req.query.tempMax !== undefined && req.params.month !== 'feb') {
+  if (req.query.tempMax !== undefined && req.params.month == 'feb') {
   weatherValues.push(req.query.tempMax)
   weatherParameters.push('tmax_feb_value <= ?')
     
@@ -258,7 +258,6 @@ Recommendation.getRecommendation =  (req, result) => {
   var cityParameters = getCityParameters(req);
   var countryParameters = getCountryParameters(req);
   var weatherParameters = getWeatherParameters(req);
-  console.log(weatherParameters.where); console.log(weatherParameters.value)
   //city, country und weather Parameter
   if (countryValues.length > 0 && weatherValues.length > 0) {
     var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where 
@@ -294,6 +293,29 @@ Recommendation.getRecommendation =  (req, result) => {
     sql.query(sqlStatement, (err, res)  => {
       if (err) {
         console.log("error: ", err);
+        result(err, null);
+        return
+      }
+
+      if (res.length) {
+        result(err, res);
+        return;
+      }
+      
+      result({kind: "not_found"}, null);
+
+    })
+  }
+  //city und weather Paramter
+  if (countryValues.length == 0 && weatherValues.length > 0) {
+    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where 
+    var weatherSqlQuery = ' AND stationId IN (SELECT stationId FROM weather_data WHERE ' + weatherParameters.where + '))' 
+    var cityInserts = cityParameters.values; var weatherInserts = weatherParameters.values; 
+    var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var weatherSqlStatement=mysql.format(weatherSqlQuery, weatherInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
+    var sqlStatement = citySqlStatement + weatherSqlStatement
+    console.log(sqlStatement);
+    sql.query(sqlStatement, (err, res)  => {
+      if (err) {
         result(err, null);
         return
       }
