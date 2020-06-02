@@ -120,20 +120,132 @@ function getWeatherParameters (req){
   weatherParameters.length=0;
   weatherValues.length=0;
 
-  if (req.query.tempMax !== undefined) {
+  if (req.query.tempMax !== undefined && req.params.month == 'jan') {
     weatherValues.push(req.query.tempMax)
     weatherParameters.push('tmax_jan_value <= ?')
     
   }
 
-  if (req.query.tempMin !== undefined) {
+  if (req.query.tempMin !== undefined && req.params.month == 'jan') {
     weatherValues.push(req.query.tempMin);
     weatherParameters.push('tmin_jan_value >= ?')
   }
 
+  if (req.query.tempMax !== undefined && req.params.month !== 'feb') {
+  weatherValues.push(req.query.tempMax)
+  weatherParameters.push('tmax_feb_value <= ?')
+    
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'feb') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_feb_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'mar') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_mar_value <= ?')
+    
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'mar') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_mar_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'apr') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_apr_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'apr') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_apr_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'may') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_may_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'may') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_may_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'jun') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_jun_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'jun') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_jun_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month =='jul') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_jul_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month =='jul') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_jul_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'aug') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_aug_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'aug') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_aug_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'sep') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_sep_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'sep') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_sep_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'sep') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_oct_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'oct') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_oct_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'nov') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_nov_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'nov') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_nov_value >= ?')
+  }
+
+  if (req.query.tempMax !== undefined && req.params.month == 'dez') {
+    weatherValues.push(req.query.tempMax)
+    weatherParameters.push('tmax_dez_value <= ?') 
+  }
+
+  if (req.query.tempMin !== undefined &&  req.params.month == 'dez') {
+    weatherValues.push(req.query.tempMin);
+    weatherParameters.push('tmin_dez_value >= ?')
+  }
+
   recomWeather = {
-    where: weatherParameters.length ?
-             weatherParameters.join( ' AND ') : '',
+     where: weatherParameters.length ?
+            weatherParameters.join( ' AND ') : '',
     values: weatherValues
   };
 
@@ -142,20 +254,20 @@ function getWeatherParameters (req){
 }
 
 
-
 Recommendation.getRecommendation =  (req, result) => {
   var cityParameters = getCityParameters(req);
   var countryParameters = getCountryParameters(req);
   var weatherParameters = getWeatherParameters(req);
+  console.log(weatherParameters.where); console.log(weatherParameters.value)
+  //city, country und weather Parameter
   if (countryValues.length > 0 && weatherValues.length > 0) {
     var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where 
     var weatherSqlQuery = ' AND stationId IN (SELECT stationId FROM weather_data WHERE ' + weatherParameters.where + ')' 
     var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))'
     var cityInserts = cityParameters.values; var countryInserts = countryParameters.values; var weatherInserts = weatherParameters.values; 
     var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var weatherSqlStatement=mysql.format(weatherSqlQuery, weatherInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
-    var sqlStatement = citySqlStatement + weatherSqlStatement + countrySqlStatement
-    console.log(sqlStatement)
-    //console.log('countryStatement 1: ' + countryParameters.where)
+    var sqlStatement = citySqlStatement + weatherSqlStatement + countrySqlStatement;
+    console.log(sqlStatement);
     sql.query(sqlStatement, (err, res)  => {
       if (err) {
         result(err, null);
@@ -171,13 +283,14 @@ Recommendation.getRecommendation =  (req, result) => {
 
     })
   }
+  //city und country Parameter
   if (countryValues.length > 0 && weatherValues.length == 0) {
     var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where
     var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))'
     var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
     var citySqlStatement= mysql.format(citySqlQuery, cityInserts); varWeatherSqlStatement=mysql.format(weatherSqlQuery, ); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
     var sqlStatement = citySqlStatement + countrySqlStatement
-    console.log('countryStatement 1: ' + countryParameters.where)
+    console.log(sqlStatement)
     sql.query(sqlStatement, (err, res)  => {
       if (err) {
         console.log("error: ", err);
@@ -187,7 +300,6 @@ Recommendation.getRecommendation =  (req, result) => {
 
       if (res.length) {
         result(err, res);
-        console.log('countrySqlStatement 2: ' + countryParameters.where)
         return;
       }
       
@@ -195,10 +307,12 @@ Recommendation.getRecommendation =  (req, result) => {
 
     })
   }
+  //nur city Parameter
   if (countryValues.length == 0 && weatherValues.length == 0) {
     var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + cityParameters.where
     var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
     var citySqlStatement= mysql.format(citySqlQuery, cityInserts); 
+    console.log(citySqlStatement)
     sql.query(citySqlStatement, (err, res)  => {
       if (err) {
         console.log("error: ", err);
@@ -218,3 +332,5 @@ Recommendation.getRecommendation =  (req, result) => {
 
 
 module.exports = Recommendation;
+
+
