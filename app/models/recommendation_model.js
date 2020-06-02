@@ -22,9 +22,9 @@ function getCityParameters (req) {
     cityParameters.length = 0;
     cityValues.length=0;}
 
-  if (req.query.history !== undefined) {
+  if (req.query.hculture !== undefined) {
     cityParameters.push('culture_hIndex = ?');
-    cityValues.push(req.query.history);
+    cityValues.push(req.query.hculture);
   }
 
   if (req.query.culture !== undefined) {
@@ -32,24 +32,24 @@ function getCityParameters (req) {
     cityValues.push(req.query.culture);
   }
 
-  if (req.query.religion !== undefined) {
+  if (req.query.rculture !== undefined) {
     cityParameters.push('culture_rIndex = ?');
-    cityValues.push(req.query.religion);
+    cityValues.push(req.query.rculture);
   }
 
-  if (req.query.architecture !== undefined) {
+  if (req.query.aculture !== undefined) {
     cityParameters.push('culture_aIndex = ?');
-    cityValues.push(req.query.architecture);
+    cityValues.push(req.query.aculture);
   }
 
-  if (req.query.industry !== undefined) {
+  if (req.query.iculture !== undefined) {
     cityParameters.push('culture_iIndex = ?');
-    cityValues.push(req.query.industry);
+    cityValues.push(req.query.iculture);
   }
 
-  if (req.query.nature !== undefined) {
+  if (req.query.nculture !== undefined) {
     cityParameters.push('culture_nIndex = ?');
-    cityValues.push(req.query.nature);
+    cityValues.push(req.query.nculture);
   }
 
   if (req.query.formations !== undefined) {
@@ -86,14 +86,14 @@ function getCountryParameters (req) {
     countryValues.length=0;
     /*console.log(recomCountry, countryParameters)*/};
 
-  if (req.query.infrastructure !== undefined) {
+  if (req.query.infra !== undefined) {
     countryParameters.push('infrastructureValue= ?');
-    countryValues.push(req.query.infrastructure);
+    countryValues.push(req.query.infra);
   }
   
-  if (req.query.cost !== undefined) {
+  if (req.query.cpi !== undefined) {
     countryParameters.push('cpiIndex = ?');
-    countryValues.push(req.query.cost);
+    countryValues.push(req.query.cpi);
   }
 
   if (req.query.safety !== undefined) {
@@ -112,145 +112,151 @@ function getCountryParameters (req) {
 
 };
 
-
 function getWeatherParameters (req){
   
   recomWeather.where=0; 
   recomWeather.values=0; 
   weatherParameters.length=0;
   weatherValues.length=0;
+  var tempMax; var tempMin; var date; var month; 
 
-  if (req.query.tempMax !== undefined && req.params.month == 'jan') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_jan_value <= ?')
+  if (req.query.temp > 0 && req.query.start !== undefined && req.query.temp) {
+
+    date = req.query.start
+    month = date.substr(5,2);
+
+    if (req.query.temp == 1){
+      tempMax = '-10'
+      tempMin = '-30'
+    }
+    if (req.query.temp == 2){
+      tempMax = '10'
+      tempMin = '-10'
+    }
+    if (req.query.temp == 3){
+      tempMax = '15'
+      tempMin = '5'
+    }
+    if (req.query.temp == 4){
+      tempMax = '25'
+      tempMin = '10'
+    }
+    if (req.query.temp == 5){
+      tempMax = '30'
+      tempMin = '20'
+    }
+    if (req.query.temp == 6){
+      tempMax = '35'
+      tempMin = '25'
+    }
+    if (req.query.temp == 7){
+      tempMin = '35'
+    }
+
+    if (req.query.temp !== undefined && month == '01') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_jan_value <= ?')
     
-  }
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_jan_value >= ?')
+    }
 
-  if (req.query.tempMin !== undefined && req.params.month == 'jan') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_jan_value >= ?')
-  }
+    if (req.query.temp !== undefined && month == '02') {
+    weatherValues.push(tempMax)
+    weatherParameters.push('tmax_feb_value <= ?')
 
-  if (req.query.tempMax !== undefined && req.params.month == 'feb') {
-  weatherValues.push(req.query.tempMax)
-  weatherParameters.push('tmax_feb_value <= ?')
-    
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month == 'feb') {
-    weatherValues.push(req.query.tempMin);
+    weatherValues.push(tempMin);
     weatherParameters.push('tmin_feb_value >= ?')
-  }
+    }
 
-  if (req.query.tempMax !== undefined && req.params.month == 'mar') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_mar_value <= ?')
+    if (req.query.temp !== undefined && month == '03') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_mar_value <= ?')
+      
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_mar_value >= ?')
+    }
+
+    if (req.query.temp !== undefined && month == '04') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_apr_value <= ?') 
     
-  }
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_apr_value >= ?')
+    }
 
-  if (req.query.tempMin !== undefined &&  req.params.month == 'mar') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_mar_value >= ?')
-  }
+    if (req.query.temp !== undefined && month == '05') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_may_value <= ?') 
 
-  if (req.query.tempMax !== undefined && req.params.month == 'apr') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_apr_value <= ?') 
-  }
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_may_value >= ?')
+    }
 
-  if (req.query.tempMin !== undefined &&  req.params.month == 'apr') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_apr_value >= ?')
-  }
-
-  if (req.query.tempMax !== undefined && req.params.month == 'may') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_may_value <= ?') 
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month == 'may') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_may_value >= ?')
-  }
-
-  if (req.query.tempMax !== undefined && req.params.month == 'jun') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_jun_value <= ?') 
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month == 'jun') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_jun_value >= ?')
-  }
-
-  if (req.query.tempMax !== undefined && req.params.month =='jul') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_jul_value <= ?') 
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month =='jul') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_jul_value >= ?')
-  }
-
-  if (req.query.tempMax !== undefined && req.params.month == 'aug') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_aug_value <= ?') 
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month == 'aug') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_aug_value >= ?')
-  }
-
-  if (req.query.tempMax !== undefined && req.params.month == 'sep') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_sep_value <= ?') 
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month == 'sep') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_sep_value >= ?')
-  }
-
-  if (req.query.tempMax !== undefined && req.params.month == 'sep') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_oct_value <= ?') 
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month == 'oct') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_oct_value >= ?')
-  }
-
-  if (req.query.tempMax !== undefined && req.params.month == 'nov') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_nov_value <= ?') 
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month == 'nov') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_nov_value >= ?')
-  }
-
-  if (req.query.tempMax !== undefined && req.params.month == 'dez') {
-    weatherValues.push(req.query.tempMax)
-    weatherParameters.push('tmax_dez_value <= ?') 
-  }
-
-  if (req.query.tempMin !== undefined &&  req.params.month == 'dez') {
-    weatherValues.push(req.query.tempMin);
-    weatherParameters.push('tmin_dez_value >= ?')
-  }
-
-  recomWeather = {
-     where: weatherParameters.length ?
-            weatherParameters.join( ' AND ') : '',
-    values: weatherValues
-  };
-
-  return recomWeather
+    if (req.query.temp !== undefined && month == '06') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_jun_value <= ?') 
   
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_jun_value >= ?')
+    }
+
+    if (req.query.temp !== undefined && month =='07') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_jul_value <= ?') 
+
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_jul_value >= ?')
+    }
+
+    if (req.query.temp !== undefined && month == '07') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_aug_value <= ?') 
+    
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_aug_value >= ?')
+    }
+
+    if (req.query.temp !== undefined && month == '09') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_sep_value <= ?') 
+
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_sep_value >= ?')
+    }
+
+    if (req.query.temp !== undefined && month == '10') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_oct_value <= ?') 
+    
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_oct_value >= ?')
+    }
+
+    if (req.query.temp !== undefined && month == '11') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_nov_value <= ?') 
+    
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_nov_value >= ?')
+    }
+
+    if (req.query.temp !== undefined && month == '12') {
+      weatherValues.push(tempMax)
+      weatherParameters.push('tmax_dez_value <= ?') 
+  
+      weatherValues.push(tempMin);
+      weatherParameters.push('tmin_dez_value >= ?')
+    }
+
+    recomWeather = {
+      where: weatherParameters.length ?
+              weatherParameters.join( ' AND ') : '',
+      values: weatherValues
+    };
+
+    return recomWeather
+  }  
 }
 
 
@@ -266,7 +272,7 @@ Recommendation.getRecommendation =  (req, result) => {
     var cityInserts = cityParameters.values; var countryInserts = countryParameters.values; var weatherInserts = weatherParameters.values; 
     var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var weatherSqlStatement=mysql.format(weatherSqlQuery, weatherInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
     var sqlStatement = citySqlStatement + weatherSqlStatement + countrySqlStatement;
-    console.log(sqlStatement);
+    console.log('city, country und weather: ' + sqlStatement);
     sql.query(sqlStatement, (err, res)  => {
       if (err) {
         result(err, null);
@@ -289,7 +295,7 @@ Recommendation.getRecommendation =  (req, result) => {
     var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
     var citySqlStatement= mysql.format(citySqlQuery, cityInserts); varWeatherSqlStatement=mysql.format(weatherSqlQuery, ); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
     var sqlStatement = citySqlStatement + countrySqlStatement
-    console.log(sqlStatement)
+    console.log('city und country: ' + sqlStatement)
     sql.query(sqlStatement, (err, res)  => {
       if (err) {
         console.log("error: ", err);
@@ -313,7 +319,7 @@ Recommendation.getRecommendation =  (req, result) => {
     var cityInserts = cityParameters.values; var weatherInserts = weatherParameters.values; 
     var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var weatherSqlStatement=mysql.format(weatherSqlQuery, weatherInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
     var sqlStatement = citySqlStatement + weatherSqlStatement
-    console.log(sqlStatement);
+    console.log('city und weather: ' + sqlStatement);
     sql.query(sqlStatement, (err, res)  => {
       if (err) {
         result(err, null);
@@ -332,9 +338,9 @@ Recommendation.getRecommendation =  (req, result) => {
   //nur city Parameter
   if (countryValues.length == 0 && weatherValues.length == 0) {
     var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + cityParameters.where
-    var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
+    var cityInserts = cityParameters.values;
     var citySqlStatement= mysql.format(citySqlQuery, cityInserts); 
-    console.log(citySqlStatement)
+    console.log('nur city: ' + citySqlStatement)
     sql.query(citySqlStatement, (err, res)  => {
       if (err) {
         console.log("error: ", err);
