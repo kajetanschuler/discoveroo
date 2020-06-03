@@ -6,7 +6,7 @@ const recommendation = require('../models/recommendation_model.js');
 exports.buildRecommendation = (req, res) => {
     recommendation.getRecommendation(req,  (err, data) => {
         if (err) {
-            if (err === "not_found") {
+            if (err.kind === "not_found") {
                 res.status(404).send({
                     message: "Did not find matching recommendation" 
                 });
