@@ -70,7 +70,7 @@ function getCountryParameters (req) {
     recomCountry.values=null
     countryParameters.length = 0;
     countryValues.length=0;
-    /*console.log(recomCountry, countryParameters)*/};
+  };
   if (req.query.infra !== undefined) {
     countryParameters.push('infrastructureValue >= ?');
     countryValues.push(req.query.infra);
@@ -96,7 +96,6 @@ function getCountryParameters (req) {
              countryParameters.join( ' AND ') : '',
     values: countryValues
   };
-  //console.log(recomCountry, countryParameters)
   return recomCountry
 };
 
@@ -217,7 +216,6 @@ function getWeatherParameters (req){
               weatherParameters.join( ' AND ') : '',
       values: weatherValues
     };
-    console.log(weatherParameters.length)
     return recomWeather
   };  
 };
@@ -246,7 +244,8 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       } 
       result({kind: "not_found"}, null);
-    })
+      console.log('We could not find a city which matches the given parameters');
+    });
   };
   //city und country Parameter
   if (cityValues.length > 0 && countryValues.length > 0 && weatherValues.length == 0) {
@@ -267,8 +266,7 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       }  
       result({kind: "not_found"}, null);
-
-    })
+    });
   };
   //city und weather Parameter
   if (cityValues.length > 0 && countryValues.length == 0 && weatherValues.length > 0) {
@@ -288,7 +286,7 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       }   
       result({kind: "not_found"}, null);
-    })
+    });
   };
   //country und weather Parameter
   if (cityValues.length == 0 && countryValues.length > 0 && weatherValues.length > 0) {
@@ -309,7 +307,7 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       }    
       result({kind: "not_found"}, null);
-    })
+    });
   };
   //nur city Parameter
   if (cityValues.length > 0 && countryValues.length == 0 && weatherValues.length == 0) {
@@ -328,7 +326,7 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       }
       result({kind: "not_found"}, null);
-    })
+    });
   };
 };
 

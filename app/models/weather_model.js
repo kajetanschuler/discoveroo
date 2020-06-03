@@ -1,6 +1,6 @@
 // Created - 11.04.2020 - by Kajetan
 
-const sql = require('./db.js');
+const sql = require('./db.js').pool;
 
 const Weather = function(weather) {
     this.city = Weather.city;

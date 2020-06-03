@@ -1,5 +1,5 @@
 //created by Svenja
-const sql = require("./db.js");
+const sql = require("./db.js").pool;
 
 // constructor for region
 const Region = function(region) {

@@ -1,6 +1,6 @@
 // Created - 02.04.2020 - by Kajetan, Malik
 
-const sql = require('./db.js');
+const sql = require('./db.js').pool;
 
 // Contstructor for city
 const City = function(city) {
