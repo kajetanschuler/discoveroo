@@ -15,6 +15,7 @@ exports.buildRecommendation = (req, res) => {
                     message: "Error retrieving parameters" 
                 });
             }
-        } else res.send(data);
+        } else res.send(data)
+            console.log("Found " + data.length + " matching cities");
     });
 };
