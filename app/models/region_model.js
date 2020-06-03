@@ -16,14 +16,10 @@ Region.getAllRegions = result => {
       result(null, err);
       return;
     }
-    if (res.length) {
-      console.log("Found region/regions: ", res);
-      result(err, res);
-      return;
-    }
-    result({kind: "not_found"}, null);
+    console.log("Found region/regions: ", res);
+    result(err, res);
+    return;
   });
-
 };
 
 
