@@ -244,7 +244,6 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       } 
       result({kind: "not_found"}, null);
-      console.log('We could not find a city which matches the given parameters');
     });
   };
   //city und country Parameter
