@@ -7,10 +7,8 @@ const mysql = require('./db.js').mysql;
 
 var cityParameters = [];
 var cityValues = [];
-var test1 = cityValues 
 var countryParameters = [];
 var countryValues = [];
-var test2 = countryValues
 var weatherParameters = [];
 var weatherValues = [];
 //var whereStatement =; 
@@ -92,7 +90,7 @@ Recommendation.getRecommendation =  (req, result) => {
   sql.query('SELECT * FROM city_data INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId' 
   + (cityParameters.length ? (' IN (SELECT cityId FROM city_data WHERE ' + cityParameters.join(' AND ') ) : "") 
   + ' AND countryCode' + (countryParameters.length ? (' IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.join(' AND ') + '))' ) : ""),
-  [test1, test2],
+  [cityValues, countryValues],
   (err, res)  => {
     if (err) {
       console.log("error: ", err);
