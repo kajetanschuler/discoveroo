@@ -8,9 +8,7 @@ var countryParameters = []; var countryValues = []; var recomCountry={};
 var weatherParameters = []; var weatherValues = []; var recomWeather={};
 
 const Recommendation = function() {
-  //this.parameters = Recommendation.parameters
 };
-
 
 function getCityParameters (req) {
 
@@ -55,6 +53,7 @@ function getCityParameters (req) {
     cityParameters.push('beach_Index >= ?');
     cityValues.push(req.query.beach);
   }
+
   recomCity = {
     where: cityParameters.length ?
              cityParameters.join( ' AND ') : '1',
@@ -83,11 +82,12 @@ function getCountryParameters (req) {
     countryParameters.push('safetyIndex >= ?');
     countryValues.push(req.query.safety);
   }
-  //rural
+  //urban
   /*if (req.query.urban !== undefined) {
     countryParameters.push();
+  
   }
-  //urban
+  //rural
   if (req.query.rural !== undefined) {
     countryParameters.push();
   }*/
@@ -107,8 +107,8 @@ function getWeatherParameters (req){
   weatherValues.length=0;
   var tempMax; var tempMin; var date; var month; 
 
-  if (req.query.temp > 0 && req.query.start !== undefined && req.query.temp) {
-
+  if (req.query.temp > 0 && req.query.start !== undefined) {
+    //Verbesserungsidee: Start oder Enddatum als Grundlage auswählen, je nach dem, in welchem Monat der größere Anteil des Urlaubs ist? Oder Mittelwert? 
     date = req.query.start
     month = date.substr(5,2);
 
@@ -219,7 +219,6 @@ function getWeatherParameters (req){
     return recomWeather
   };  
 };
-
 
 Recommendation.getRecommendation =  (req, result) => {
   var cityParameters = getCityParameters(req);
