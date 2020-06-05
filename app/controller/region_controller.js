@@ -4,7 +4,7 @@ const Region = require("../models/region_model.js");
 
 
 //find all region
-exports.findAllRegions = res => {
+exports.findAllRegions = (req, res) => {
     Region.getAllRegions((err, data) => {
       if (err) {
           res.status(500).send({

@@ -13,11 +13,11 @@ Region.getAllRegions = result => {
   sql.query("SELECT regionCode, regionName, countryCode FROM region_data", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, err);
       return;
     }
     console.log("Found region/regions: ", res);
-    result(err, res);
+    result(null, res);
     return;
   });
 };
@@ -33,7 +33,7 @@ Region.getRegionDetails = (region, result) => {
     }
     if(res.length){
       console.log("Found details for this region: ", res);
-      result(err, res);
+      result(null, res);
       return;
     }
     result({kind: "not_found"}, null);
@@ -52,7 +52,7 @@ Region.getCitiesInRegion = (region, result) => {
     }
     if(res.length){
       console.log("Found cities in this region: ", res);
-      result(err, res);
+      result(null, res);
       return;
     }
     result({kind: "not_found"}, null);

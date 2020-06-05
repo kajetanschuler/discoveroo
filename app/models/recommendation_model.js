@@ -46,7 +46,7 @@ function getCityParameters (req) {
     cityValues.push(req.query.rformations);
   }*/
   if (req.query.mformations !== undefined) {
-    cityParameters.push('culture_mIndex >= ?');
+    cityParameters.push('formations_mIndex >= ?');
     cityValues.push(req.query.mformations);
   }
   if (req.query.beach !== undefined) {
@@ -82,15 +82,6 @@ function getCountryParameters (req) {
     countryParameters.push('safetyIndex >= ?');
     countryValues.push(req.query.safety);
   }
-  //urban
-  /*if (req.query.urban !== undefined) {
-    countryParameters.push();
-  
-  }
-  //rural
-  if (req.query.rural !== undefined) {
-    countryParameters.push();
-  }*/
   recomCountry = {
     where: countryParameters.length ?
              countryParameters.join( ' AND ') : '',
@@ -220,6 +211,7 @@ function getWeatherParameters (req){
   };  
 };
 
+
 Recommendation.getRecommendation =  (req, result) => {
   var cityParameters = getCityParameters(req);
   var countryParameters = getCountryParameters(req);
@@ -260,7 +252,7 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       }
       if (res.length) {
-        result(err, res);
+        result(null, res);
         return;
       }  
       result({kind: "not_found"}, null);
@@ -280,7 +272,7 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       }
       if (res.length) {
-        result(err, res);
+        result(null, res);
         return;
       }   
       result({kind: "not_found"}, null);
@@ -301,7 +293,7 @@ Recommendation.getRecommendation =  (req, result) => {
         return
       }
       if (res.length) {
-        result(err, res);
+        result(null, res);
         return;
       }    
       result({kind: "not_found"}, null);
@@ -320,7 +312,45 @@ Recommendation.getRecommendation =  (req, result) => {
         return
       }
       if (res.length) {
-        result(err, res);
+        result(null, res);
+        return;
+      }
+      result({kind: "not_found"}, null);
+    });
+  };
+  //nur country Parameter
+  if (cityValues.length == 0 && countryValues.length > 0 && weatherValues.length == 0) {
+    var countrySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + countryParameters.where
+    var countryInserts = countryParameters.values;
+    var SqlStatement= mysql.format(countrySqlQuery, countryInserts); 
+    console.log('nur city: ' + citySqlStatement)
+    sql.query(SqlStatement, (err, res)  => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return
+      }
+      if (res.length) {
+        result(null, res);
+        return;
+      }
+      result({kind: "not_found"}, null);
+    });
+  };
+   //nur weather Parameter
+   if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length > 0) {
+    var weatherSqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + weatherParameters.where
+    var weatherInserts = weatherParameters.values;
+    var SqlStatement= mysql.format(weatherSqlQuery, weatherInserts); 
+    console.log('nur city: ' + citySqlStatement)
+    sql.query(SqlStatement, (err, res)  => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return
+      }
+      if (res.length) {
+        result(null, res);
         return;
       }
       result({kind: "not_found"}, null);
