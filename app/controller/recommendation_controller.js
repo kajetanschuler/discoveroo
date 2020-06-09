@@ -9,12 +9,12 @@ exports.buildRecommendation = (req, res) => {
             if (err.kind === "not_found") {
                 res.status(404).send({
                     message: "Did not find matching recommendation" 
-                });
+                }); 
             } else {
                 res.status(500).send({
                     message: "Error retrieving parameters" 
                 });
-            }
+            };
         } else {
         res.send(data) 
         console.log("Found " + data.length + " matching cities");
