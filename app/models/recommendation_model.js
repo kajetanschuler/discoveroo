@@ -18,46 +18,43 @@ function getCityParameters (req) {
     recomCity.values=null
     cityParameters.length = 0;
     cityValues.length=0;}
-  if (req.query.hculture !== undefined) {
+
+  if (req.query.hculture !== undefined && req.query.hculture !== '0') {
     cityParameters.push('culture_hIndex >= ?');
     cityValues.push(req.query.hculture);
   }
-  if (req.query.cculture !== undefined) {
+  if (req.query.cculture !== undefined && req.query.cculture !== '0') {
     cityParameters.push('culture_cIndex >= ?');
     cityValues.push(req.query.cculture);
   }
-  if (req.query.rculture !== undefined) {
+  if (req.query.rculture !== undefined && req.query.rculture !== '0') {
     cityParameters.push('culture_rIndex >= ?');
     cityValues.push(req.query.rculture);
   }
-  if (req.query.aculture !== undefined) {
+  if (req.query.aculture !== undefined && req.query.aculture !== '0') {
     cityParameters.push('culture_aIndex >= ?');
     cityValues.push(req.query.aculture);
   }
-  if (req.query.iculture !== undefined) {
+  if (req.query.iculture !== undefined && req.query.iculture !== '0') {
     cityParameters.push('culture_iIndex >= ?');
     cityValues.push(req.query.iculture);
   }
-  if (req.query.nculture !== undefined) {
+  if (req.query.nculture !== undefined & req.query.nculture !=='0') {
     cityParameters.push('culture_nIndex >= ?');
     cityValues.push(req.query.nculture);
   }
-  /*if (req.query.rformations !== undefined) {
-    cityParameters.push('formations_rIndex = ?');
-    cityValues.push(req.query.rformations);
-  }*/
-  if (req.query.mformations !== undefined) {
+  if (req.query.mformations !== undefined && req.query.mformation !== '0') {
     cityParameters.push('formations_mIndex >= ?');
     cityValues.push(req.query.mformations);
   }
-  if (req.query.beach !== undefined) {
+  if (req.query.beach !== undefined && req.query.beach !== 0) {
     cityParameters.push('beach_Index >= ?');
     cityValues.push(req.query.beach);
   }
 
   recomCity = {
     where: cityParameters.length ?
-             cityParameters.join( ' AND ') : '1',
+             cityParameters.join( ' AND ') : '',
     values: cityValues
   };
   return recomCity
@@ -71,15 +68,15 @@ function getCountryParameters (req) {
     countryParameters.length = 0;
     countryValues.length=0;
   };
-  if (req.query.infra !== undefined) {
+  if (req.query.infra !== undefined && req.query.infra !== '0') {
     countryParameters.push('infrastructureValue >= ?');
     countryValues.push(req.query.infra);
   }
-  if (req.query.cpi !== undefined) {
+  if (req.query.cpi !== undefined && req.query.cpi !== '0') {
     countryParameters.push('cpiIndex <= ?');
     countryValues.push(req.query.cpi);
   }
-  if (req.query.safety !== undefined) {
+  if (req.query.safety !== undefined && req.query.safety !== '0') {
     countryParameters.push('safetyIndex >= ?');
     countryValues.push(req.query.safety);
   }
@@ -244,7 +241,7 @@ function getOrderParameter (req) {
   countVeryImportant++ 
   orderParam = 'infrastructureValue'
   }
-  if (req.query.cpi >= '1') {
+  if (req.query.cpi <= '2' && req.query.cpi !== '0') {
   countVeryImportant++ 
   orderParam = 'cpiIndex'
   }
@@ -292,7 +289,7 @@ Recommendation.getRecommendation =  (req, result) => {
         return;
       }
       if (res.length) {
-        result(err, res);
+        result(null, res);
         return;
       } 
       result({kind: "not_found"}, null);
