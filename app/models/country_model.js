@@ -1,6 +1,6 @@
 // Created - 08.04.2020 - by Kajetan
 
-const sql = require('./db.js').pool;
+const sql = require('./db.js');
 
 // Constructor for country
 const Country = function(country) {

@@ -1,23 +1,197 @@
 //Created - 05.2020 - by Svenja
 
-const sql = require('./db.js').pool;
-const mysql = require('./db.js').mysql; 
+const sql = require('./db.js');
+const mysql = require('mysql');
 
 var cityParameters = []; var cityValues = []; var recomCity ={};
 var countryParameters = []; var countryValues = []; var recomCountry={};
 var weatherParameters = []; var weatherValues = []; var recomWeather={};
 var order={};
 
-const Recommendation = function() {
-};
+class Recommendation {
+  constructor() {
+  }
+  static getRecommendation(req, result) {
+    var cityParameters = getCityParameters(req);
+    var countryParameters = getCountryParameters(req);
+    var weatherParameters = getWeatherParameters(req);
+    var orderParameter = getOrderParameter(req);
+    console.log(orderParameter);
+    //city, country und weather Parameter
+    if (cityValues.length > 0 && countryValues.length > 0 && weatherValues.length > 0) {
+      var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where;
+      var weatherSqlQuery = ' AND stationId IN (SELECT stationId FROM weather_data WHERE ' + weatherParameters.where + ')';
+      var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))';
+      var cityInserts = cityParameters.values;
+      var countryInserts = countryParameters.values;
+      var weatherInserts = weatherParameters.values;
+      var citySqlStatement = mysql.format(citySqlQuery, cityInserts);
+      var weatherSqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
+      var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
+      var orderSqlStatement = orderParameter.orderSqlStatement;
+      var sqlStatement = citySqlStatement + weatherSqlStatement + countrySqlStatement + orderSqlStatement;
+      console.log('city, country und weather: ' + sqlStatement);
+      sql.query(sqlStatement, (err, res) => {
+        if (err) {
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          result(null, res);
+          return;
+        }
+        result({ kind: "not_found" }, null);
+      });
+    }
+    ;
+    //city und country Parameter
+    if (cityValues.length > 0 && countryValues.length > 0 && weatherValues.length == 0) {
+      var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where;
+      var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))';
+      var cityInserts = cityParameters.values;
+      var countryInserts = countryParameters.values;
+      var citySqlStatement = mysql.format(citySqlQuery, cityInserts);
+      var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
+      var orderSqlStatement = orderParameter.orderSqlStatement;
+      var sqlStatement = citySqlStatement + countrySqlStatement + orderSqlStatement;
+      console.log('city und country: ' + sqlStatement);
+      sql.query(sqlStatement, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          result(null, res);
+          return;
+        }
+        result({ kind: "not_found" }, null);
+      });
+    }
+    ;
+    //city und weather Parameter
+    if (cityValues.length > 0 && countryValues.length == 0 && weatherValues.length > 0) {
+      var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where;
+      var weatherSqlQuery = ' AND stationId IN (SELECT stationId FROM weather_data WHERE ' + weatherParameters.where + '))';
+      var cityInserts = cityParameters.values;
+      var weatherInserts = weatherParameters.values;
+      var citySqlStatement = mysql.format(citySqlQuery, cityInserts);
+      var weatherSqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
+      var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
+      var orderSqlStatement = orderParameter.orderSqlStatement;
+      var sqlStatement = citySqlStatement + weatherSqlStatement + orderSqlStatement;
+      console.log('city und weather: ' + sqlStatement);
+      sql.query(sqlStatement, (err, res) => {
+        if (err) {
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          result(null, res);
+          return;
+        }
+        result({ kind: "not_found" }, null);
+      });
+    }
+    ;
+    //country und weather Parameter
+    if (cityValues.length == 0 && countryValues.length > 0 && weatherValues.length > 0) {
+      var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode';
+      var weatherSqlQuery = ' WHERE stationId IN (SELECT stationId FROM weather_data WHERE ' + weatherParameters.where;
+      var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))';
+      var countryInserts = countryParameters.values;
+      var weatherInserts = weatherParameters.values;
+      var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
+      var weatherSqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
+      var orderSqlStatement = orderParameter.orderSqlStatement;
+      var sqlStatement = weatherSqlStatement + countrySqlStatement + orderSqlStatement;
+      console.log('country und weather: ' + sqlStatement);
+      sql.query(sqlStatement, (err, res) => {
+        if (err) {
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          result(null, res);
+          return;
+        }
+        result({ kind: "not_found" }, null);
+      });
+    }
+    ;
+    //nur city Parameter
+    if (cityValues.length > 0 && countryValues.length == 0 && weatherValues.length == 0) {
+      var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + cityParameters.where;
+      var cityInserts = cityParameters.values;
+      var orderSqlStatement = orderParameter.orderSqlStatement;
+      var citySqlStatement = mysql.format(citySqlQuery, cityInserts);
+      var sqlStatement = citySqlStatement + orderSqlStatement;
+      console.log('nur city: ' + sqlStatement);
+      sql.query(sqlStatement, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          result(null, res);
+          return;
+        }
+        result({ kind: "not_found" }, null);
+      });
+    }
+    ;
+    //nur country Parameter
+    if (cityValues.length == 0 && countryValues.length > 0 && weatherValues.length == 0) {
+      var countrySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + countryParameters.where;
+      var countryInserts = countryParameters.values;
+      var orderSqlStatement = orderParameter.orderSqlStatement;
+      var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
+      var sqlStatement = countrySqlStatement + orderSqlStatement;
+      console.log('nur country: ' + sqlStatement);
+      sql.query(sqlStatement, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          result(null, res);
+          return;
+        }
+        result({ kind: "not_found" }, null);
+      });
+    }
+    ;
+    //nur weather Parameter
+    if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length > 0) {
+      var weatherSqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + weatherParameters.where;
+      var weatherInserts = weatherParameters.values;
+      var sqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
+      console.log('nur weather: ' + sqlStatement);
+      sql.query(sqlStatement, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+          return;
+        }
+        if (res.length) {
+          result(null, res);
+          return;
+        }
+        result({ kind: "not_found" }, null);
+      });
+    }
+    ;
+  }
+}
 
 function getCityParameters (req) {
 
-  if (recomCountry != undefined){
-    recomCity.where=null
-    recomCity.values=null
-    cityParameters.length = 0;
-    cityValues.length=0;}
+  recomCity.where=null
+  recomCity.values=null
+  cityParameters.length = 0;
+  cityValues.length=0;
 
   if (req.query.hculture !== undefined && req.query.hculture !== '0') {
     cityParameters.push('culture_hIndex >= ?');
@@ -62,12 +236,11 @@ function getCityParameters (req) {
 
 function getCountryParameters (req) {
 
-  if (recomCountry != undefined){
-    recomCountry.where=null
-    recomCountry.values=null
-    countryParameters.length = 0;
-    countryValues.length=0;
-  };
+  recomCountry.where=null
+  recomCountry.values=null
+  countryParameters.length = 0;
+  countryValues.length=0;
+
   if (req.query.infra !== undefined && req.query.infra !== '0') {
     countryParameters.push('infrastructureValue >= ?');
     countryValues.push(req.query.infra);
@@ -94,7 +267,7 @@ function getWeatherParameters (req){
   recomWeather.values=0; 
   weatherParameters.length=0;
   weatherValues.length=0;
-  var tempMax; var tempMin; var date; var month; 
+  var tempMax; var tempMin; var date; var month
 
   if (req.query.temp !== undefined && req.query.start !== undefined) {
     //Verbesserungsidee: Start oder Enddatum als Grundlage auswählen, je nach dem, in welchem Monat der größere Anteil des Urlaubs ist? Oder Mittelwert? 
@@ -267,160 +440,6 @@ function getOrderParameter (req) {
 };  
 
 
-Recommendation.getRecommendation =  (req, result) => {
-  var cityParameters = getCityParameters(req);
-  var countryParameters = getCountryParameters(req);
-  var weatherParameters = getWeatherParameters(req);
-  var orderParameter = getOrderParameter(req);
-  console.log(orderParameter)
-  //city, country und weather Parameter
-  if (cityValues.length > 0 && countryValues.length > 0 && weatherValues.length > 0) {
-    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where 
-    var weatherSqlQuery = ' AND stationId IN (SELECT stationId FROM weather_data WHERE ' + weatherParameters.where + ')' 
-    var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))'
-    var cityInserts = cityParameters.values; var countryInserts = countryParameters.values; var weatherInserts = weatherParameters.values; 
-    var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var weatherSqlStatement=mysql.format(weatherSqlQuery, weatherInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
-    var orderSqlStatement = orderParameter.orderSqlStatement
-    var sqlStatement = citySqlStatement + weatherSqlStatement + countrySqlStatement + orderSqlStatement;
-    console.log('city, country und weather: ' + sqlStatement);
-    sql.query(sqlStatement, (err, res)  => {
-      if (err) {
-        result(err, null);
-        return;
-      }
-      if (res.length) {
-        result(null, res);
-        return;
-      } 
-      result({kind: "not_found"}, null);
-    });
-  };
-  //city und country Parameter
-  if (cityValues.length > 0 && countryValues.length > 0 && weatherValues.length == 0) {
-    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where
-    var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))'
-    var cityInserts = cityParameters.values; var countryInserts = countryParameters.values;
-    var citySqlStatement= mysql.format(citySqlQuery, cityInserts); varWeatherSqlStatement=mysql.format(weatherSqlQuery, ); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
-    var orderSqlStatement = orderParameter.orderSqlStatement
-    var sqlStatement = citySqlStatement + countrySqlStatement + orderSqlStatement
-    console.log('city und country: ' + sqlStatement)
-    sql.query(sqlStatement, (err, res)  => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-      if (res.length) {
-        result(null, res);
-        return;
-      }  
-      result({kind: "not_found"}, null);
-    });
-  };
-  //city und weather Parameter
-  if (cityValues.length > 0 && countryValues.length == 0 && weatherValues.length > 0) {
-    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where 
-    var weatherSqlQuery = ' AND stationId IN (SELECT stationId FROM weather_data WHERE ' + weatherParameters.where + '))' 
-    var cityInserts = cityParameters.values; var weatherInserts = weatherParameters.values; 
-    var citySqlStatement= mysql.format(citySqlQuery, cityInserts); var weatherSqlStatement=mysql.format(weatherSqlQuery, weatherInserts); var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts)
-    var orderSqlStatement = orderParameter.orderSqlStatement
-    var sqlStatement = citySqlStatement + weatherSqlStatement  + orderSqlStatement
-
-    console.log('city und weather: ' + sqlStatement);
-    sql.query(sqlStatement, (err, res)  => {
-      if (err) {
-        result(err, null);
-        return;
-      }
-      if (res.length) {
-        result(null, res);
-        return;
-      }   
-      result({kind: "not_found"}, null);
-    });
-  };
-  //country und weather Parameter
-  if (cityValues.length == 0 && countryValues.length > 0 && weatherValues.length > 0) {
-    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode'
-    var weatherSqlQuery = ' WHERE stationId IN (SELECT stationId FROM weather_data WHERE ' + weatherParameters.where  
-    var countrySqlQuery = ' AND countryCode IN (SELECT countryCode FROM country_data WHERE ' + countryParameters.where + '))'
-    var countryInserts = countryParameters.values; var weatherInserts = weatherParameters.values; 
-    var countrySqlStatement= mysql.format(countrySqlQuery, countryInserts); var weatherSqlStatement=mysql.format(weatherSqlQuery, weatherInserts);
-    var orderSqlStatement = orderParameter.orderSqlStatement
-    var sqlStatement = weatherSqlStatement + countrySqlStatement + orderSqlStatement
-    console.log('country und weather: ' + sqlStatement);
-    sql.query(sqlStatement, (err, res)  => {
-      if (err) {
-        result(err, null);
-        return
-      }
-      if (res.length) {
-        result(null, res);
-        return;
-      }    
-      result({kind: "not_found"}, null);
-    });
-  };
-  //nur city Parameter
-  if (cityValues.length > 0 && countryValues.length == 0 && weatherValues.length == 0) {
-    var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + cityParameters.where
-    var cityInserts = cityParameters.values; var orderSqlStatement = orderParameter.orderSqlStatement
-    var citySqlStatement= mysql.format(citySqlQuery, cityInserts);
-    var sqlStatement = citySqlStatement + orderSqlStatement;
-    console.log('nur city: ' + sqlStatement)
-    sql.query(sqlStatement, (err, res)  => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return
-      }
-      if (res.length) {
-        result(null, res);
-        return;
-      }
-      result({kind: "not_found"}, null);
-    });
-  };
-  //nur country Parameter
-  if (cityValues.length == 0 && countryValues.length > 0 && weatherValues.length == 0) {
-    var countrySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + countryParameters.where
-    var countryInserts = countryParameters.values; var orderSqlStatement = orderParameter.orderSqlStatement
-    var countrySqlStatement= mysql.format(countrySqlQuery, countryInserts); 
-    var sqlStatement = countrySqlStatement + orderSqlStatement;
-    console.log('nur country: ' + sqlStatement)
-    sql.query(sqlStatement, (err, res)  => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return
-      }
-      if (res.length) {
-        result(null, res);
-        return;
-      }
-      result({kind: "not_found"}, null);
-    });
-  };
-   //nur weather Parameter
-   if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length > 0) {
-    var weatherSqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + weatherParameters.where
-    var weatherInserts = weatherParameters.values;
-    var sqlStatement= mysql.format(weatherSqlQuery, weatherInserts); 
-    console.log('nur weather: ' + sqlStatement)
-    sql.query(sqlStatement, (err, res)  => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return
-      }
-      if (res.length) {
-        result(null, res);
-        return;
-      }
-      result({kind: "not_found"}, null);
-    });
-  };
-};
 
 module.exports = Recommendation;
 
