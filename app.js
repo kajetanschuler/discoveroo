@@ -1,9 +1,9 @@
-// const serverless = require('serverless-http');
+const serverless = require('serverless-http');
 const express = require('express')
-// const cors = require('cors')
+const cors = require('cors')
 const app = express()
 
-//app.use(cors());
+app.use(cors());
 
 app.get('/', function (req, res) {
   res.send('Welcome to discoveroo!')
@@ -15,8 +15,8 @@ require("./app/routes/weather_routes")(app);
 require("./app/routes/region_routes")(app);
 require("./app/routes/recommendation_routes")(app);
 
-app.listen(3003, function () {
+/*app.listen(3003, function () {
   console.log('Example app listening on port 3000!');
-}); 
+}); */
 
-//module.exports.handler = serverless(app);
+module.exports.handler = serverless(app);
