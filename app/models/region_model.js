@@ -17,7 +17,7 @@ Region.getAllRegions = result => {
       return;
     }
     console.log("Found region/regions: ", res);
-    result(null, res);
+    result(err, res);
     return;
   });
 };
@@ -33,7 +33,7 @@ Region.getRegionDetails = (region, result) => {
     }
     if(res.length){
       console.log("Found details for this region: ", res);
-      result(null, res);
+      result(err, res);
       return;
     }
     result({kind: "not_found"}, null);
@@ -52,7 +52,7 @@ Region.getCitiesInRegion = (region, result) => {
     }
     if(res.length){
       console.log("Found cities in this region: ", res);
-      result(null, res);
+      result(err, res);
       return;
     }
     result({kind: "not_found"}, null);

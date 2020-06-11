@@ -20,13 +20,13 @@ exports.findAllRegions = (req, res) => {
 exports.findRegionDetails = (req, res) => {
   Region.getRegionDetails(req.params.region, (err, data) => {
     if (err) {
-      if (err.kind === "not_found") {
+      if (err === "not_found") {
         res.status(404).send({
-          message: "Did not find region with code/name: " + req.params.region
+          message: "Did not find region with code " + req.params.region
       });
     } else {
         res.status(500).send({
-          message: "Error retrieving region with code/name " + req.params.region
+          message: "Error retrieving region with code " + req.params.region
         });
       }
     } else res.send(data);
@@ -40,12 +40,12 @@ exports.findCitiesInRegion = (req, res) => {
     if (err) {
      if (err.kind == "not_found") {
        res.status(404).send({
-            message: "Did not find region with code/name " + req.params.region
+            message: "Did not find region with code " + req.params.region
        });
       }
      else {
        res.status(500).send({
-         message: "Error retrieving region with code/name " + req.params.region
+         message: "Error retrieving region with code " + req.params.region
        });
       }
     } else res.send(data);
