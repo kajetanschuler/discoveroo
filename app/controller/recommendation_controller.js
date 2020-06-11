@@ -17,7 +17,6 @@ exports.buildRecommendation = (req, res) => {
             };
         } else {
         res.send(data) 
-        console.log("Found " + data.length + " matching cities");
         }
     });
 };
