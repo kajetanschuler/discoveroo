@@ -5,34 +5,35 @@ const Region = require("../models/region_model.js");
 
 //find all region
 exports.findAllRegions = (req, res) => {
-  Region.getAllRegions((err, data) => {
-    if (err) {
-      if (err.kind == "not found") {
-      res.status(500).send({
-        message: "Did not find regions"
-      });
-    }
-      else {
+    Region.getAllRegions((err, data) => {
+      if (err) {
+        if (err.kind == "not found") {
         res.status(500).send({
-          message: "Error retrieving regions"
+          message: "Did not find regions"
         });
       }
-    }
-    else res.send(data);
-  });
-};
+        else {
+          res.status(500).send({
+            message: "Error retrieving regions"
+          });
+        }
+      }
+      else res.send(data);
+    });
+  };
+
 
 // Find details for one region by regionCode or regionName
 exports.findRegionDetails = (req, res) => {
   Region.getRegionDetails(req.params.region, (err, data) => {
     if (err) {
-      if (err === "not_found") {
+      if (err === "not found") {
         res.status(404).send({
           message: "Did not find region with code:" + req.params.region
       });
     } else {
         res.status(500).send({
-          message: "Error retrieving region with Code" + req.params.region
+          message: "Error retrieving regions with Code" + req.params.region
         });
       }
     } else res.send(data);
@@ -51,7 +52,7 @@ exports.findCitiesInRegion = (req, res) => {
       }
      else {
        res.status(500).send({
-         message: "Error retrieving region with name " + req.params.region
+         message: "Error retrieving regions with name" + req.params.region
        });
       }
     } else res.send(data);

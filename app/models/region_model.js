@@ -13,7 +13,7 @@ Region.getAllRegions = result => {
   sql.query("SELECT regionCode, regionName, countryCode FROM region_data", (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(err, err);
+      result(null, err);
       return;
     }
     if (res.length) {
