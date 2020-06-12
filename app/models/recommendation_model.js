@@ -52,7 +52,6 @@ class Recommendation {
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlStatement + countrySqlStatement + orderSqlStatement;
-      console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -441,23 +440,18 @@ function getOrderParameter (req) {
   if (req.query.beach == '2') {
     orderParamImportant.push('beach_Index')
   }
-  console.log(orderParamVeryImportant)
-  console.log(orderParamImportant)
   if (orderParamImportant.length > 0 && orderParamVeryImportant.length == 0) {
     orderParameter = orderParamImportant.length ? 
-                     orderParamImportant.join( ", ")  : ' ' + 
-    console.log(orderParameter)
+                     orderParamImportant.join( ", ")  : ' ' 
     order = {
       orderSqlStatement: ' ORDER BY ' +orderParameter +' DESC '
     };
   }
   else if (orderParamImportant.length == 0 && orderParamVeryImportant.length > 0) {
     orderParameter = orderParamVeryImportant.length ? 
-                     orderParamVeryImportant.join( ", ")  : ' ' + 
-    console.log(orderParameter)
-    console.log('ztest')
+                     orderParamVeryImportant.join( ", ")  : ' ' 
     order = {
-      orderSqlStatement: ' ORDER BY ' +orderParameter +' DESC '
+      orderSqlStatement: ' ORDER BY ' + orderParameter +' DESC '
     };
   }
   else if (orderParamImportant.length > 0 && orderParamVeryImportant.length > 0) {
@@ -474,7 +468,7 @@ function getOrderParameter (req) {
       orderSqlStatement: ''
     }
   };
-  console.log(order)
+
   return order 
 };  
 
