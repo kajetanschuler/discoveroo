@@ -329,7 +329,7 @@ function getWeatherParameters (req){
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_jun_value >= ?')
     }
-    if (monthStart == '6' || monthEnd == '6') {
+    if (monthStart == '7' || monthEnd == '7') {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_jul_value <= ?') 
       weatherValues.push(tempMin);
