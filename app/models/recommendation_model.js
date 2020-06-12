@@ -329,19 +329,19 @@ function getWeatherParameters (req){
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_jun_value >= ?')
     }
-    if (monthStart == '7' || monthEnd == '7') {
+    if (monthStart == '07' || monthEnd == '07') {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_jul_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_jul_value >= ?')
     }
-    if (monthStart == '8' || monthEnd == '8') {
+    if (monthStart == '08' || monthEnd == '08') {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_aug_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_aug_value >= ?')
     }
-    if (monthStart == '9' || monthEnd == '9') {
+    if (monthStart == '09' || monthEnd == '09') {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_sep_value <= ?') 
       weatherValues.push(tempMin);
