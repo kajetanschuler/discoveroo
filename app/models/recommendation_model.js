@@ -6,7 +6,7 @@ const mysql = require('mysql');
 var cityParameters = []; var cityValues = []; var recomCity ={};
 var countryParameters = []; var countryValues = []; var recomCountry={};
 var weatherParameters = []; var weatherValues = []; var recomWeather={};
-var order={};
+var orderParamVeryImportant =[]; var orderParamImportant =[]; var order =[]
 
 class Recommendation {
   constructor() {
@@ -206,9 +206,9 @@ function getCityParameters (req) {
     cityParameters.push('culture_nIndex >= ?');
     cityValues.push(req.query.nculture);
   }
-  if (req.query.mformations !== undefined && req.query.mformation !== '0') {
+  if (req.query.mountains !== undefined && req.query.mountains !== '0') {
     cityParameters.push('formations_mIndex >= ?');
-    cityValues.push(req.query.mformations);
+    cityValues.push(req.query.mountains);
   }
   if (req.query.beach !== undefined && req.query.beach !== 0) {
     cityParameters.push('beach_Index >= ?');
@@ -256,7 +256,7 @@ function getWeatherParameters (req){
   recomWeather.values=0; 
   weatherParameters.length=0;
   weatherValues.length=0;
-  var tempMax; var tempMin; var date; 
+  var tempMax; var tempMin; 
   var monthStart=0; monthEnd=0;
 
   if (req.query.temp !== undefined && req.query.start !== undefined) {
@@ -375,60 +375,102 @@ function getWeatherParameters (req){
 };
 
 function getOrderParameter (req) {
-  var countVeryImportant = 0; 
-  var orderParam; 
-  
+  orderParamImportant.length=0;
+  orderParamVeryImportant.length=0;
   if (req.query.hculture >= '4') {
-  countVeryImportant++ 
-  orderParam = 'culure_hIndex'
-  };
+   orderParamVeryImportant.push('culure_hIndex')
+  }
+  if (req.query.hculture == '3') {
+     orderParamImportant.push('culture_hIndex')
+  }
   if (req.query.cculture >= '4'){
-  countVeryImportant++ 
-  orderParam = 'culture_cIndex'
-  };
+    orderParamVeryImportant.push('culture_cIndex')
+  }
+  if (req.query.cculture == '3') {
+      orderParamImportant.push('culture_cIndex')
+  }
   if (req.query.aculture >= '4') {
-  countVeryImportant++ 
-  orderParam = 'culture_aIndex'
+    orderParamVeryImportant.push('culture_aIndex')
+  }
+  if (req.query.aculture == '3') {
+    orderParamImportant.push('culture_aIndex')
   }
   if (req.query.iculture >= '4'){
-  countVeryImportant++ 
-  orderParam = 'culture_iIndex'
+    orderParamVeryImportant.push('culture_iIndex')
+  }
+  if (req.query.iculture == '3') {
+    orderParamImportant.push('culture_iIndex')
   }
   if (req.query.nculture >= '4'){
-  countVeryImportant++ 
-  orderParam = 'culture_nIndex'
+    orderParamVeryImportant.push('culture_nIndex') 
+  }
+  if (req.query.nculture == '3') {
+    orderParamImportant.push('culture_nIndex')
   }
   if (req.query.mculture >= '4'){
-  countVeryImportant++ 
-  orderParam = 'formations_mIndex'
+    orderParamVeryImportant.push('culture_nIndex')
+  }
+  if (req.query.mculture == '3') {
+    orderParamImportant.push('culture_nIndex')
+  }
+  if (req.query.mountains >= '4') {
+    orderParamImportant.push('formations_mIndex')
+  }
+  if (req.query.mountains == '3') {
+    orderParamImportant.push('formations_mIndex')
   }
   if(req.query.infra >= '4'){
-  countVeryImportant++ 
-  orderParam = 'infrastructureValue'
+    orderParamVeryImportant.push('infrastructureValue')
+  }
+  if (req.query.infra == '3') {
+      orderParamImportant.push('infrastructureValue')
   }
   if (req.query.cpi <= '2' && req.query.cpi !== '0') {
-  countVeryImportant++ 
-  orderParam = 'cpiIndex'
+    orderParamVeryImportant.push('cpiIndex')
   }
-  if (req.query.safety >= '4') {
-  countVeryImportant++ 
-  orderParam = 'safetyIndex'
+  if (req.query.cpi == '1') {
+    orderParamImportant.push('cpiIndex')
   }
-  if(countVeryImportant == 1 ) {
-  orderSqlQuery = ' order by ' + orderParam + ' DESC '
-  order = {
-      orderSqlStatement: orderSqlQuery
+  if (req.query.safety >='4') {
+    orderParamVeryImportant.push('safetyIndex')
+  }
+  if (req.query.safety == '3') {
+    orderParamImportant.push('safetyIndex')
+  }
+  if (req.query.beach == '2') {
+    orderParamImportant.push('beach_Index')
+  }
+  if (orderParamImportant.length > 0 && orderParamVeryImportant.length == 0) {
+    orderParameter = orderParamImportant.length ? 
+                     orderParamImportant.join( ", ")  : ' ' 
+    order = {
+      orderSqlStatement: ' ORDER BY ' +orderParameter +' DESC '
     };
   }
-   else {
+  else if (orderParamImportant.length == 0 && orderParamVeryImportant.length > 0) {
+    orderParameter = orderParamVeryImportant.length ? 
+                     orderParamVeryImportant.join( ", ")  : ' ' 
+    order = {
+      orderSqlStatement: ' ORDER BY ' + orderParameter +' DESC '
+    };
+  }
+  else if (orderParamImportant.length > 0 && orderParamVeryImportant.length > 0) {
+    orderParameterImportant = orderParamVeryImportant.length ? 
+                              orderParamVeryImportant.join( ", ") : ' '
+    orderParameterVeryImportant = orderParamImportant.length ? 
+                                  orderParamImportant.join( ", ") : ' '
+    order = {
+      orderSqlStatement: ' order by ' + orderParameterImportant + ', ' + orderParameterVeryImportant  + ' DESC '
+    };
+  }
+  else {
     order = {
       orderSqlStatement: ''
     }
-  }
+  };
+
   return order 
 };  
-
-
 
 module.exports = Recommendation;
 
