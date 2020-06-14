@@ -252,14 +252,13 @@ function getCountryParameters (req) {
 
 function getWeatherParameters (req){
   
-  recomWeather.where=0; 
-  recomWeather.values=0; 
+  recomWeather.where=null 
+  recomWeather.values=null 
   weatherParameters.length=0;
   weatherValues.length=0;
-  var tempMax; var tempMin; 
   var monthStart=0; monthEnd=0;
 
-  if (req.query.temp !== undefined && req.query.start !== undefined) {
+  if (req.query.temp !== undefined && req.query.start !== undefined && req.query.temp !== '0') {
     dateStart = req.query.start
     monthStart = dateStart.substr(5,2);
     if (req.query.end !== undefined) {
