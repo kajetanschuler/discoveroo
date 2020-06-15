@@ -360,9 +360,9 @@ function getWeatherParameters (req){
     }
     if (monthStart == '12' || monthEnd == '12') {
       weatherValues.push(tempMax)
-      weatherParameters.push('tmax_dez_value <= ?') 
+      weatherParameters.push('tmax_dec_value <= ?') 
       weatherValues.push(tempMin);
-      weatherParameters.push('tmax_dez_value >= ?')
+      weatherParameters.push('tmax_dec_value >= ?')
     }
     recomWeather = {
       where: weatherParameters.length ?
