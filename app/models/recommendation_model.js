@@ -40,8 +40,7 @@ class Recommendation {
         }
         result({ kind: "not_found" }, null);
       });
-    }
-    ;
+    };
     //city und country Parameter
     if (cityValues.length > 0 && countryValues.length > 0 && weatherValues.length == 0) {
       var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where;
@@ -63,8 +62,7 @@ class Recommendation {
         }
         result({ kind: "not_found" }, null);
       });
-    }
-    ;
+    };
     //city und weather Parameter
     if (cityValues.length > 0 && countryValues.length == 0 && weatherValues.length > 0) {
       var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE cityId IN (SELECT cityId FROM city_data WHERE ' + cityParameters.where;
@@ -87,8 +85,7 @@ class Recommendation {
         }
         result({ kind: "not_found" }, null);
       });
-    }
-    ;
+    };
     //country und weather Parameter
     if (cityValues.length == 0 && countryValues.length > 0 && weatherValues.length > 0) {
       var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode';
@@ -111,8 +108,7 @@ class Recommendation {
         }
         result({ kind: "not_found" }, null);
       });
-    }
-    ;
+    };
     //nur city Parameter
     if (cityValues.length > 0 && countryValues.length == 0 && weatherValues.length == 0) {
       var citySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + cityParameters.where;
@@ -131,8 +127,7 @@ class Recommendation {
         }
         result({ kind: "not_found" }, null);
       });
-    }
-    ;
+    };
     //nur country Parameter
     if (cityValues.length == 0 && countryValues.length > 0 && weatherValues.length == 0) {
       var countrySqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + countryParameters.where;
@@ -151,14 +146,12 @@ class Recommendation {
         }
         result({ kind: "not_found" }, null);
       });
-    }
-    ;
+    };
     //nur weather Parameter
     if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length > 0) {
       var weatherSqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + weatherParameters.where;
       var weatherInserts = weatherParameters.values;
       var sqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
-
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -170,8 +163,21 @@ class Recommendation {
         }
         result({ kind: "not_found" }, null);
       });
+    };
+    if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0) {
+     var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 10'
+     sql.query(sqlStatement, (err, res) => {
+      if (err) {
+        result(err, null);
+        return;
+      }
+      if (res.length) {
+        result(null, res);
+        return;
+      }
+      result({ kind: "not_found" }, null);
+    });
     }
-    ;
   }
 }
 
@@ -214,7 +220,6 @@ function getCityParameters (req) {
     cityParameters.push('beach_Index >= ?');
     cityValues.push(req.query.beach);
   }
-
   recomCity = {
     where: cityParameters.length ?
              cityParameters.join( ' AND ') : '',
