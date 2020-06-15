@@ -15,8 +15,8 @@ require("./app/routes/weather_routes")(app);
 require("./app/routes/region_routes")(app);
 require("./app/routes/recommendation_routes")(app);
 
-/*app.listen(3003, function () {
+app.listen(3003, function () {
   console.log('Example app listening on port 3000!');
-});*/
+});
 
 module.exports.handler = serverless(app);
