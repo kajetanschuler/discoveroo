@@ -2,6 +2,7 @@
 
 const sql = require('./db.js');
 const mysql = require('mysql');
+const filterFunction = require('../functions/filter_nearby_cities.js')
 
 var cityParameters = []; var cityValues = []; var recomCity ={};
 var countryParameters = []; var countryValues = []; var recomCountry={};
@@ -35,7 +36,7 @@ class Recommendation {
           return;
         }
         if (res.length) {
-          result(null, res);
+          result(null, filterCities(res, req));
           return;
         }
         result({ kind: "not_found" }, null);
@@ -57,7 +58,7 @@ class Recommendation {
           return;
         }
         if (res.length) {
-          result(null, res);
+          result(null, filterCities(res, req));
           return;
         }
         result({ kind: "not_found" }, null);
@@ -80,7 +81,7 @@ class Recommendation {
           return;
         }
         if (res.length) {
-          result(null, res);
+          result(null, filterCities(res, req));
           return;
         }
         result({ kind: "not_found" }, null);
@@ -103,7 +104,7 @@ class Recommendation {
           return;
         }
         if (res.length) {
-          result(null, res);
+          result(null, filterCities(res, req));
           return;
         }
         result({ kind: "not_found" }, null);
@@ -122,7 +123,7 @@ class Recommendation {
           return;
         }
         if (res.length) {
-          result(null, res);
+          result(null, filterCities(res, req));
           return;
         }
         result({ kind: "not_found" }, null);
@@ -141,7 +142,7 @@ class Recommendation {
           return;
         }
         if (res.length) {
-          result(null, res);
+          result(null, filterCities(res, req));
           return;
         }
         result({ kind: "not_found" }, null);
@@ -158,7 +159,7 @@ class Recommendation {
           return;
         }
         if (res.length) {
-          result(null, res);
+          result(null, filterCities(res, req));
           return;
         }
         result({ kind: "not_found" }, null);
@@ -172,12 +173,23 @@ class Recommendation {
         return;
       }
       if (res.length) {
-        result(null, res);
+        result(null, filterCities(res, req));
         return;
       }
       result({ kind: "not_found" }, null);
     });
     }
+  }
+}
+
+function filterCities(res, req) {
+  if (req.query.ZIP !== undefined && req.query.distance !== undefined) {
+    var zip = req.query.ZIP;
+    var distance = req.query.distance;
+    //console.log(zip);
+    //console.log(distance);
+    //console.log(res);
+    return filterFunction.filterRecommendedCities(res, zip, distance)
   }
 }
 
@@ -382,7 +394,7 @@ function getOrderParameter (req) {
   orderParamImportant.length=0;
   orderParamVeryImportant.length=0;
   if (req.query.hculture >= '4') {
-   orderParamVeryImportant.push('culure_hIndex')
+   orderParamVeryImportant.push('culture_hIndex')
   }
   if (req.query.hculture == '3') {
      orderParamImportant.push('culture_hIndex')

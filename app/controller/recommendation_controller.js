@@ -8,11 +8,11 @@ exports.buildRecommendation = (req, res) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: "Did not find matching recommendation" 
+                    message: "Did not find matching recommendation" + err
                 }); 
             } else {
                 res.status(500).send({
-                    message: "Error retrieving parameters" 
+                    message: "Error retrieving parameters" + err 
                 });
             };
         } else {
