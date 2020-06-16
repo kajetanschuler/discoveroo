@@ -12,7 +12,7 @@ exports.buildRecommendation = (req, res) => {
                 }); 
             } else {
                 res.status(500).send({
-                    message: "Error retrieving parameters" 
+                    message: "Error retrieving parameters" + err 
                 });
             };
         } else {
