@@ -31,6 +31,7 @@ pool.getConnection((err, connection) => {
 
 module.exports = pool
 
+
 /* const mysql = require('mysql');
 const db_config = require('../config/db_config.js');
 

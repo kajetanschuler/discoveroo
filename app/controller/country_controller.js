@@ -6,7 +6,7 @@ const Country = require('../models/country_model.js');
 exports.findAll = (req, res) => {
     Country.getAll((err, data) => {
         if (err) {
-            if (err.kind === "not_found") {
+            if (err === "not_found") {
                 res.status(404).send({
                     message: "Did not find Countries"
                 });
@@ -21,6 +21,7 @@ exports.findAll = (req, res) => {
 
 // Find one country by countryCode or countryName
 exports.findCountry = (req, res) => {
+    //console.log(req)
     Country.getCountryDetails(req.params.country, (err, data) => {
         if (err) {
             if (err === "not_found") {
