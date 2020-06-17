@@ -7,12 +7,12 @@ exports.buildRecommendation = (req, res) => {
     recommendation.getRecommendation(req,  (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: "Did not find matching recommendation" + err
+                res.send({
+                    message: "Did not find matching recommendation"
                 }); 
             } else {
                 res.status(500).send({
-                    message: "Error retrieving parameters" + err 
+                    message: "Error retrieving parameters" 
                 });
             };
         } else {
