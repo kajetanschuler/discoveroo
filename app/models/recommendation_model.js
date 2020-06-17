@@ -36,6 +36,7 @@ class Recommendation {
           return;
         }
         if (res.length) {
+          console.log(res);
           result(null, filterCities(res, req));
           return;
         }
@@ -183,13 +184,16 @@ class Recommendation {
 }
 
 function filterCities(res, req) {
-  if (req.query.ZIP !== undefined && req.query.distance !== undefined) {
+  if (req.query.ZIP !== undefined && req.query.distance !== undefined && req.query.ZIP !== "" && req.query.distance !== "") {
     var zip = req.query.ZIP;
     var distance = req.query.distance;
-    //console.log(zip);
+    //console.log("zip:" + zip);
     //console.log(distance);
     //console.log(res);
     return filterFunction.filterRecommendedCities(res, zip, distance)
+  }
+  else {
+    return res;
   }
 }
 
