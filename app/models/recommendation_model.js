@@ -118,6 +118,8 @@ class Recommendation {
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var citySqlStatement = mysql.format(citySqlQuery, cityInserts);
       var sqlStatement = citySqlStatement + orderSqlStatement;
+      console.log('nur city Paramater')
+      console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -166,8 +168,11 @@ class Recommendation {
         result({ kind: "not_found" }, null);
       });
     };
+    //keine Parameter --> random 
     if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0) {
      var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 10'
+     console.log('keine Parameter')
+     console.log(sqlStatement)
      sql.query(sqlStatement, (err, res) => {
       if (err) {
         result(err, null);
@@ -232,7 +237,7 @@ function getCityParameters (req) {
     cityParameters.push('formations_mIndex >= ?');
     cityValues.push(req.query.mountains);
   }
-  if (req.query.beach !== undefined && req.query.beach !== 0) {
+  if (req.query.beach !== undefined && req.query.beach !== '0') {
     cityParameters.push('beach_Index >= ?');
     cityValues.push(req.query.beach);
   }
