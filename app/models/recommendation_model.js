@@ -118,8 +118,6 @@ class Recommendation {
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var citySqlStatement = mysql.format(citySqlQuery, cityInserts);
       var sqlStatement = citySqlStatement + orderSqlStatement;
-      console.log('nur city Paramater')
-      console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -168,11 +166,9 @@ class Recommendation {
         result({ kind: "not_found" }, null);
       });
     };
-    //keine Parameter --> random 
-    if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0) {
-     var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 10'
-     console.log('keine Parameter')
-     console.log(sqlStatement)
+    //keine Parameter, aber Distanz --> random, shuffle 150
+    if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0 && req.query.distance !=='' && req.query.distance !== undefined) {
+     var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 250'
      sql.query(sqlStatement, (err, res) => {
       if (err) {
         result(err, null);
@@ -185,6 +181,21 @@ class Recommendation {
       result({ kind: "not_found" }, null);
     });
     }
+    //kein Paramater, keine Distanz --> random shuffle 30
+    if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0 && (req.query.distance ==''|| req.query.distance == undefined)) {
+      var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 30'
+      sql.query(sqlStatement, (err, res) => {
+       if (err) {
+         result(err, null);
+         return;
+       }
+       if (res.length) {
+         result(null, filterCities(res, req));
+         return;
+       }
+       result({ kind: "not_found" }, null);
+     });
+     }
   }
 }
 
