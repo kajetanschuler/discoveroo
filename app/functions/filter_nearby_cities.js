@@ -123,6 +123,11 @@ class CityFilter {
             
             return filterComplete
         };
+        static filterByWeatherStations (json) {
+            var filterWeatherComplete = filterCities(json);
+
+            return filterWeatherComplete        
+        }
     
 }
 
