@@ -209,7 +209,7 @@ function filterCities(res, req) {
     return filterFunction.filterRecommendedCities(res, zip, distance)
   }
   else {
-    return res;
+    return filterFunction.filterByWeatherStations(res);
   }
 }
 
