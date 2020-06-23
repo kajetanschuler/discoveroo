@@ -319,6 +319,46 @@
                     }
                 }
             }
+        },
+        "recommendation": {
+            "parameters": [
+                {
+                    "name": "temp",
+                    "in": "query",
+                    "required": false,
+                    "description": "Temperature range for recommended cities. 0 to 5.",
+                    "type": "integer"
+                },
+                {
+                    "name": "safety",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of saftey",
+                    "type": "integer"
+                },
+                {
+                    "name": "cpi",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred maximum living costs",
+                    "type": "integer"
+                },
+                {
+                    "name": "infra",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of infrastructure",
+                    "type": "integer"
+                },
+                {
+                    "name": "aculture",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of architectural culture",
+                    "type": "integer"
+                }
+            ]
+            
         }
     },
 
