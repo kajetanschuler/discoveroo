@@ -320,7 +320,7 @@
                 }
             }
         },
-        "recommendation": {
+        "/recommendation": {
             "parameters": [
                 {
                     "name": "temp",
@@ -357,7 +357,21 @@
                     "description": "Preferred minimum level of architectural culture",
                     "type": "integer"
                 }
-            ]
+            ],
+            "get": {
+                "tags": [
+                    "Recommendation"
+                ],
+                "summary": "Get weather data for given weather station",
+                "responses": {
+                    "200": {
+                        "description": "Weather data is found"
+                    },
+                    "404": {
+                        "description": "Regions is not valid"
+                    }
+                }
+            }
             
         }
     },
@@ -396,6 +410,11 @@
       "Cities": {
         "type": "array",
         "$ref": "#/definitions/Cities"
+      },
+
+      "Recommendation": {
+        "type": "array",
+        "$ref": "#/definitions/Recommendation"
       },
 
       "Country": {
