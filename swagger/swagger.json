@@ -11,15 +11,9 @@
     },
     "servers": [
         {
-          "url": "https://2lrdf61z8j.execute-api.eu-central-1.amazonaws.com/dev"
+          "url": "https://mdxompdmpd.execute-api.eu-central-1.amazonaws.com/dev/api/v1/"
         }
       ],
-    "tags": [
-      {
-        "name": "Cities",
-        "description": "Endpoints related to cities and their details"
-      }
-    ],
     "consumes": [
       "application/json"
     ],
@@ -28,6 +22,60 @@
     ],
 
     "paths": {
+        "/recommendation": {
+            "parameters": [
+                {
+                    "name": "temp",
+                    "in": "query",
+                    "required": false,
+                    "description": "Temperature range for recommended cities\n\n0 = Doesn't matter\n\n1 = -30 to -10°C\n\n2 = -10 to 10°C\n\n3 = 5 to 15°C\n\n4 = 10 to 25°C\n\n5 = 20 to 30°C\n\n6 = 25 to 35°C\n\n7 = more than 30°C",
+                    "type": "integer"
+                },
+                {
+                    "name": "safety",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of safety in country\n\n 0 (doesn't matter) to 5 (highest safety)",
+                    "type": "integer"
+                },
+                {
+                    "name": "cpi",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred maximum living costs of country\n\n 5 (doesn't matter) to 5 (lowest cost)",
+                    "type": "integer"
+                },
+                {
+                    "name": "infra",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of infrastructure in country\n\n 0 (doesn't matter) to 5 (highest infrastructure)",
+                    "type": "integer"
+                },
+                {
+                    "name": "aculture",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of architectural culture in city\n\n0 (doesn't matter) to 5 (highest level of architectural culture)",
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Recommendation"
+                ],
+                "summary": "Get weather data for given weather station",
+                "responses": {
+                    "200": {
+                        "description": "Weather data is found"
+                    },
+                    "404": {
+                        "description": "Regions is not valid"
+                    }
+                }
+            }
+        },
+
         "/cities": {
             "get": {
                 "tags": [
@@ -319,156 +367,6 @@
                     }
                 }
             }
-        },
-        "/recommendation": {
-            "parameters": [
-                {
-                    "name": "temp",
-                    "in": "query",
-                    "required": false,
-                    "description": "Temperature range for recommended cities. 0 to 5.",
-                    "type": "integer"
-                },
-                {
-                    "name": "safety",
-                    "in": "query",
-                    "required": false,
-                    "description": "Preferred minimum level of saftey",
-                    "type": "integer"
-                },
-                {
-                    "name": "cpi",
-                    "in": "query",
-                    "required": false,
-                    "description": "Preferred maximum living costs",
-                    "type": "integer"
-                },
-                {
-                    "name": "infra",
-                    "in": "query",
-                    "required": false,
-                    "description": "Preferred minimum level of infrastructure",
-                    "type": "integer"
-                },
-                {
-                    "name": "aculture",
-                    "in": "query",
-                    "required": false,
-                    "description": "Preferred minimum level of architectural culture",
-                    "type": "integer"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Recommendation"
-                ],
-                "summary": "Get weather data for given weather station",
-                "responses": {
-                    "200": {
-                        "description": "Weather data is found"
-                    },
-                    "404": {
-                        "description": "Regions is not valid"
-                    }
-                }
-            }
-            
         }
-    },
-
-    
-
-
-
-
-
-
-
-    "definitions": {
-      "City": {
-        "required": [
-          "email",
-          "_id"
-        ],
-        "properties": {
-          "_id": {
-            "type": "string",
-            "uniqueItems": true
-          },
-          "email": {
-            "type": "string",
-            "uniqueItems": true
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          }
-        }
-      },
-      "Cities": {
-        "type": "array",
-        "$ref": "#/definitions/Cities"
-      },
-
-      "Recommendation": {
-        "type": "array",
-        "$ref": "#/definitions/Recommendation"
-      },
-
-      "Country": {
-        "required": [
-          "email",
-          "_id"
-        ],
-        "properties": {
-          "_id": {
-            "type": "string",
-            "uniqueItems": true
-          },
-          "email": {
-            "type": "string",
-            "uniqueItems": true
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          }
-        }
-      },
-      "Countries": {
-        "type": "array",
-        "$ref": "#/definitions/Countries"
-      },
-
-      "Region": {
-        "required": [
-          "email",
-          "_id"
-        ],
-        "properties": {
-          "_id": {
-            "type": "string",
-            "uniqueItems": true
-          },
-          "email": {
-            "type": "string",
-            "uniqueItems": true
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          }
-        }
-      },
-      "Regions": {
-        "type": "array",
-        "$ref": "#/definitions/Regions"
-      }
     }
   }
