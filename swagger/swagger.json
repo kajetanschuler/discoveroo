@@ -53,6 +53,20 @@
                     "type": "integer"
                 },
                 {
+                    "name": "beach",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred level of beaches in or near city\n\n 0 (doesn't matter) to 3 (many beaches)",
+                    "type": "integer"
+                },
+                {
+                    "name": "mountains",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred level of mountains in city\n\n 0 (doesn't matter) to 5 (highest amount of mountains)",
+                    "type": "integer"
+                },
+                {
                     "name": "aculture",
                     "in": "query",
                     "required": false,
