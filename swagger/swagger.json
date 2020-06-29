@@ -58,7 +58,77 @@
                     "required": false,
                     "description": "Preferred minimum level of architectural culture in city\n\n0 (doesn't matter) to 5 (highest level of architectural culture)",
                     "type": "integer"
-                }
+                },
+                {
+                    "name": "hculture",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of historical culture in city\n\n 0 (doesn't matter) to 5 (highest level of historical culture)",
+                    "type": "integer"
+                },
+                {
+                    "name": "nculture",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of natural culture in city\n\n 0 (doesn't matter) to 5 (highest level of natural culture)",
+                    "type": "integer"
+                },
+                {
+                    "name": "rculture",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of religious culture in city\n\n 0 (doesn't matter) to 5 (highest level of religious culture)",
+                    "type": "integer"
+                },
+                {
+                    "name": "iculture",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of industrial culture in city\n\n 0 (doesn't matter) to 5 (highest level of industrial culture)",
+                    "type": "integer"
+                },
+                {
+                    "name": "cculture",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred minimum level of culture (theaters, operas...) in city\n\n 0 (doesn't matter) to 5 (highest level of culture)",
+                    "type": "integer"
+                },
+                {
+                    "name": "start",
+                    "in": "query",
+                    "required": false,
+                    "description": "Date where the vacation should start\n\nNeeds to be in YYYY-MM-DD format",
+                    "type": "string"
+                },
+                {
+                    "name": "end",
+                    "in": "query",
+                    "required": false,
+                    "description": "Date where the vacation should end\n\nNeeds to be in YYYY-MM-DD format",
+                    "type": "string"
+                },
+                {
+                    "name": "distance",
+                    "in": "query",
+                    "required": false,
+                    "description": "Preferred maximum distance to destination in km",
+                    "type": "integer"
+                },
+                {
+                    "name": "ZIP",
+                    "in": "query",
+                    "required": false,
+                    "description": "ZIP code of departure city (used to measure distance)",
+                    "type": "string"
+                },
+                {
+                    "name": "countryDeparture",
+                    "in": "query",
+                    "required": false,
+                    "description": "Country of departure in ISO-2-Digit format, for example DE for Germany - currently no function",
+                    "type": "string"
+                }                
             ],
             "get": {
                 "tags": [
