@@ -42,7 +42,7 @@
                     "name": "cpi",
                     "in": "query",
                     "required": false,
-                    "description": "Preferred maximum living costs of country\n\n 5 (doesn't matter) to 5 (lowest cost)",
+                    "description": "Preferred maximum living costs of country\n\n 0 (doesn't matter), 1 (lowest cost) to 5 (highest cost)",
                     "type": "integer"
                 },
                 {
