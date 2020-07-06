@@ -327,7 +327,7 @@ function getWeatherParameters (req){
       tempMin = '25'
     }
     if (req.query.temp == 7){
-      tempMin = '35'
+      tempMin = '30'
     }
     if (monthStart == '01' || monthEnd == '01') {
       weatherValues.push(tempMax)
