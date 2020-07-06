@@ -30,6 +30,7 @@ class Recommendation {
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlStatement + weatherSqlStatement + countrySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -53,6 +54,7 @@ class Recommendation {
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlStatement + countrySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -76,6 +78,7 @@ class Recommendation {
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlStatement + weatherSqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -99,6 +102,7 @@ class Recommendation {
       var weatherSqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlQuery + weatherSqlStatement + countrySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -118,6 +122,7 @@ class Recommendation {
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var citySqlStatement = mysql.format(citySqlQuery, cityInserts);
       var sqlStatement = citySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -137,6 +142,7 @@ class Recommendation {
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var sqlStatement = countrySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -154,7 +160,7 @@ class Recommendation {
       var weatherSqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + weatherParameters.where;
       var weatherInserts = weatherParameters.values;
       var sqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
-      console.log(sqlStatement)
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -170,6 +176,7 @@ class Recommendation {
     //keine Parameter, aber Distanz --> random, shuffle 150
     if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0 && req.query.distance !=='' && req.query.distance !== undefined) {
      var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 250'
+     //console.log(sqlStatement)
      sql.query(sqlStatement, (err, res) => {
       if (err) {
         result(err, null);
@@ -185,6 +192,7 @@ class Recommendation {
     //kein Paramater, keine Distanz --> random shuffle 30
     if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0 && (req.query.distance ==''|| req.query.distance == undefined)) {
       var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 30'
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
        if (err) {
          result(err, null);
@@ -295,6 +303,7 @@ function getWeatherParameters (req){
   weatherParameters.length=0;
   weatherValues.length=0;
   var monthStart=0; monthEnd=0;
+  var monthInbetween=[0]; 
 
   if (req.query.temp !== undefined && req.query.start !== undefined && req.query.temp !== '0') {
     dateStart = req.query.start
@@ -303,7 +312,7 @@ function getWeatherParameters (req){
     if (req.query.end !== undefined) {
       dateEnd = req.query.end
       monthEnd = dateEnd.substr(5,2)
-      if (req.query.end !== undefined) {
+      if (req.query.end !== undefined && monthStart !== monthEnd) {
         dateEnd = req.query.end
         monthEnd = dateEnd.substr(5,2)
         yearEnd = dateEnd.substr(0,4);
@@ -313,8 +322,7 @@ function getWeatherParameters (req){
             return [start, ...range(start+1, end)];
           }
           monthInbetween = range(monthStart++, monthEnd)
-          console.log(monthInbetween)
-          console.log(monthInbetween.includes(8))
+          //console.log(monthInbetween)
         }
       } 
     }
@@ -343,7 +351,8 @@ function getWeatherParameters (req){
       tempMin = '25'
     }
     if (req.query.temp == 7){
-      tempMin = '35'
+      tempMin = '30'
+      tempMax = '100'
     }
     if (monthStart == '01' || monthEnd == '01' || monthInbetween.includes(1)) {
       weatherValues.push(tempMax)
