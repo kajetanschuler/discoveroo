@@ -30,6 +30,7 @@ class Recommendation {
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlStatement + weatherSqlStatement + countrySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -53,6 +54,7 @@ class Recommendation {
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlStatement + countrySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -76,6 +78,7 @@ class Recommendation {
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlStatement + weatherSqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -99,6 +102,7 @@ class Recommendation {
       var weatherSqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var sqlStatement = citySqlQuery + weatherSqlStatement + countrySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -118,6 +122,7 @@ class Recommendation {
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var citySqlStatement = mysql.format(citySqlQuery, cityInserts);
       var sqlStatement = citySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -137,6 +142,7 @@ class Recommendation {
       var orderSqlStatement = orderParameter.orderSqlStatement;
       var countrySqlStatement = mysql.format(countrySqlQuery, countryInserts);
       var sqlStatement = countrySqlStatement + orderSqlStatement;
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -154,6 +160,7 @@ class Recommendation {
       var weatherSqlQuery = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode WHERE ' + weatherParameters.where;
       var weatherInserts = weatherParameters.values;
       var sqlStatement = mysql.format(weatherSqlQuery, weatherInserts);
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
         if (err) {
           result(err, null);
@@ -169,6 +176,7 @@ class Recommendation {
     //keine Parameter, aber Distanz --> random, shuffle 150
     if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0 && req.query.distance !=='' && req.query.distance !== undefined) {
      var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 250'
+     //console.log(sqlStatement)
      sql.query(sqlStatement, (err, res) => {
       if (err) {
         result(err, null);
@@ -184,6 +192,7 @@ class Recommendation {
     //kein Paramater, keine Distanz --> random shuffle 30
     if (cityValues.length == 0 && countryValues.length == 0 && weatherValues.length == 0 && (req.query.distance ==''|| req.query.distance == undefined)) {
       var sqlStatement = 'SELECT * FROM city_data INNER JOIN weather_data ON city_data.stationId = weather_data.stationId INNER JOIN country_data ON city_data.countryCode = country_data.countryCode ORDER BY RAND() LIMIT 30'
+      //console.log(sqlStatement)
       sql.query(sqlStatement, (err, res) => {
        if (err) {
          result(err, null);
@@ -294,13 +303,28 @@ function getWeatherParameters (req){
   weatherParameters.length=0;
   weatherValues.length=0;
   var monthStart=0; monthEnd=0;
+  var monthInbetween=[0]; 
 
   if (req.query.temp !== undefined && req.query.start !== undefined && req.query.temp !== '0') {
     dateStart = req.query.start
     monthStart = dateStart.substr(5,2);
+    yearStart = dateStart.substr(0,4);
     if (req.query.end !== undefined) {
       dateEnd = req.query.end
       monthEnd = dateEnd.substr(5,2)
+      if (req.query.end !== undefined && monthStart !== monthEnd) {
+        dateEnd = req.query.end
+        monthEnd = dateEnd.substr(5,2)
+        yearEnd = dateEnd.substr(0,4);
+        if (yearStart==yearEnd) {
+          function range(start, end) {
+            if(start == end - 1 ) return [start];
+            return [start, ...range(start+1, end)];
+          }
+          monthInbetween = range(monthStart++, monthEnd)
+          //console.log(monthInbetween)
+        }
+      } 
     }
     if (req.query.temp == 1){
       tempMax = '-10'
@@ -327,75 +351,76 @@ function getWeatherParameters (req){
       tempMin = '25'
     }
     if (req.query.temp == 7){
-      tempMin = '35'
+      tempMin = '30'
+      tempMax = '100'
     }
-    if (monthStart == '01' || monthEnd == '01') {
+    if (monthStart == '01' || monthEnd == '01' || monthInbetween.includes(1)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_jan_value <= ?')
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_jan_value >= ?')
     }
-    if (monthStart == '02' || monthEnd == '02') {
+    if (monthStart == '02' || monthEnd == '02' || monthInbetween.includes(2)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_feb_value <= ?')
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_feb_value >= ?')
     }
-    if (monthStart == '03' || monthEnd == '03') {
+    if (monthStart == '03' || monthEnd == '03'  || monthInbetween.includes(3)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_mar_value <= ?')
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_mar_value >= ?')
     }
-    if (monthStart == '04' || monthEnd == '04') {
+    if (monthStart == '04' || monthEnd == '04' || monthInbetween.includes(4)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_apr_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_apr_value >= ?')
     }
-    if (monthStart == '05' || monthEnd == '05') {
+    if (monthStart == '05' || monthEnd == '05'  || monthInbetween.includes(5)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_may_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_may_value >= ?')
     }
-    if (monthStart == '06' || monthEnd == '06') {
+    if (monthStart == '06' || monthEnd == '06'  || monthInbetween.includes(6)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_jun_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_jun_value >= ?')
     }
-    if (monthStart == '07' || monthEnd == '07') {
+    if (monthStart == '07' || monthEnd == '07'  || monthInbetween.includes(7)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_jul_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_jul_value >= ?')
     }
-    if (monthStart == '08' || monthEnd == '08') {
+    if (monthStart == '08' || monthEnd == '08'  || monthInbetween.includes(8)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_aug_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_aug_value >= ?')
     }
-    if (monthStart == '09' || monthEnd == '09') {
+    if (monthStart == '09' || monthEnd == '09' || monthInbetween.includes(9)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_sep_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_sep_value >= ?')
     }
-    if (monthStart == '10' || monthEnd == '10') {
+    if (monthStart == '10' || monthEnd == '10' || monthInbetween.includes(10)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_oct_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_oct_value >= ?')
     }
-    if (monthStart == '11' || monthEnd == '11') {
+    if (monthStart == '11' || monthEnd == '11' || monthInbetween.includes(11)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_nov_value <= ?') 
       weatherValues.push(tempMin);
       weatherParameters.push('tmax_nov_value >= ?')
     }
-    if (monthStart == '12' || monthEnd == '12') {
+    if (monthStart == '12' || monthEnd == '12' || monthInbetween.includes(12)) {
       weatherValues.push(tempMax)
       weatherParameters.push('tmax_dec_value <= ?') 
       weatherValues.push(tempMin);
